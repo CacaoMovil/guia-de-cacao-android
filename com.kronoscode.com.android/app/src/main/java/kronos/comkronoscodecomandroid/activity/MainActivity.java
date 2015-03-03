@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
 import kronos.comkronoscodecomandroid.R;
 import kronos.comkronoscodecomandroid.activity.api.ApiClient;
+import kronos.comkronoscodecomandroid.activity.object.GuideObject;
 import kronos.comkronoscodecomandroid.activity.object.VersionObject;
 import kronos.comkronoscodecomandroid.activity.utils.Utils;
 import retrofit.Callback;
@@ -20,24 +23,8 @@ public class MainActivity extends CacaoActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // Testing
-        setProgressBarIndeterminateVisibility(Boolean.TRUE);
-
-        ApiClient.getCacaoApiInterface().getGuides(new Callback<VersionObject>() {
-            @Override
-            public void success(VersionObject result, Response response) {
-                if (response.getStatus() == 200) {
-                    Utils.toastMessage(getBaseContext(), result.getmDate());
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                setProgressBarIndeterminateVisibility(Boolean.FALSE);
-                Utils.toastMessage(getBaseContext(), error.getMessage());
-            }
-        });
+        //setProgressBarIndeterminateVisibility(Boolean.TRUE);
+        getRemoteData();
     }
 
 
@@ -61,5 +48,41 @@ public class MainActivity extends CacaoActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * This function will request data from the server
+     */
+    public void getRemoteData() {
+
+        ApiClient.getCacaoApiInterface().getGuides(new Callback<List<GuideObject>>() {
+            @Override
+            public void success(List<GuideObject> guideObjects, Response response) {
+                if (response.getStatus() == 200) {
+                    postData(guideObjects);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                Utils.toastMessage(getBaseContext(), error.getMessage());
+            }
+        });
+    }
+
+    /**
+     * Data from backend, let's fill the listview !
+     * @param guides
+     */
+    public void postData(List<GuideObject> guides) {
+        if (guides.size() > 0) {
+            for (GuideObject guide : guides) {
+                for (VersionObject version: guide.getmVersions()) {
+                    Utils.toastMessage(this, version.getmName());
+                }
+            }
+        }
     }
 }

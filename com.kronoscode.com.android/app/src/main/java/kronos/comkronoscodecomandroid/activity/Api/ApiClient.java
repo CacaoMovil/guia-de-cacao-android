@@ -1,6 +1,8 @@
 package kronos.comkronoscodecomandroid.activity.api;
 
-import kronos.comkronoscodecomandroid.activity.object.VersionObject;
+import java.util.List;
+
+import kronos.comkronoscodecomandroid.activity.object.GuideObject;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
@@ -35,7 +37,7 @@ public final class ApiClient {
 
         // Get guides
         @GET("/guides/?format=json")
-        void getGuides (Callback <VersionObject> callBack);
+        void getGuides (Callback<List<GuideObject>> callBack);
 
     }
 }
