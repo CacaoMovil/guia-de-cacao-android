@@ -1,0 +1,1 @@
+<provider android:name="com.kronoscode.cacao.android.app.provider.CacaoProvider" android:authorities="com.kronoscode.cacao.android.app.provider.cacao" android:exported="false" />

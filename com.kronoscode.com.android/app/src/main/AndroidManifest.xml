@@ -16,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <provider
+            android:name="com.kronoscode.cacao.android.app.provider.CacaoProvider"
+            android:authorities="com.kronoscode.cacao.android.app.provider.Cacao" />
+
     </application>
 
     <!-- To access  API: -->

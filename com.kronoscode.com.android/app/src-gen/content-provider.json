@@ -1,0 +1,52 @@
+{
+  "type": "content-provider",
+  "packageName": "com.kronoscode.cacao.android.app",
+  "databaseName": "cacao",
+  "databaseVersion": 2,
+  "models": [
+    {
+      "name": "Guide",
+      "members" : [
+        {
+            "type":"String",
+            "name":"name"
+        }
+      ],
+      "parcelable": true
+    },
+    {
+        "name": "GuideVersion",
+        "members" : [
+            {
+                "type":"String",
+                "name":"name"
+            },
+            {
+                "type":"String",
+                "name":"file"
+            },
+            {
+                "type":"String",
+                "name":"date"
+            },
+            {
+                "type":"String",
+                "name":"num_version"
+            },
+            {
+                "type":"long",
+                "name":"guide_id"
+            }
+        ],
+        "parcelable": true
+    }
+  ],
+    "relationships": [
+      {
+        "parent": "Guide",
+        "child": "GuideVersion",
+        "parent_column": "_id",
+        "child_column": "guide_id"
+      }
+    ]
+}

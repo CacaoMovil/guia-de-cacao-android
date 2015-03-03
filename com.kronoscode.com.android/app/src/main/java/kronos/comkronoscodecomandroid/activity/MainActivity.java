@@ -3,11 +3,15 @@ package kronos.comkronoscodecomandroid.activity;
 import android.app.ActionBar;
 import android.app.ExpandableListActivity;
 import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Loader;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Window;
+
+import com.kronoscode.cacao.android.app.database.table.GuideTable;
+import com.kronoscode.cacao.android.app.provider.CacaoProvider;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -92,7 +96,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+        return new CursorLoader(MainActivity.this, CacaoProvider.GUIDE_CONTENT_URI, null, null, null, GuideTable.NAME + " ASC");
     }
 
     @Override
