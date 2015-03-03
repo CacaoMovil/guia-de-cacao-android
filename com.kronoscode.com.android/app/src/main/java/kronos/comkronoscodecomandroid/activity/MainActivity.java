@@ -1,12 +1,21 @@
 package kronos.comkronoscodecomandroid.activity;
 
+import android.app.ActionBar;
+import android.app.ExpandableListActivity;
+import android.app.LoaderManager;
+import android.content.Loader;
+import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Window;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import kronos.comkronoscodecomandroid.R;
+import kronos.comkronoscodecomandroid.activity.adapter.GuideAdapter;
 import kronos.comkronoscodecomandroid.activity.api.ApiClient;
 import kronos.comkronoscodecomandroid.activity.object.GuideObject;
 import kronos.comkronoscodecomandroid.activity.object.VersionObject;
@@ -16,45 +25,31 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends CacaoActivity {
+public class MainActivity extends ExpandableListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
-        //setProgressBarIndeterminateVisibility(Boolean.TRUE);
-        getRemoteData();
-    }
+        ActionBar actionBar = getActionBar();
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle("Home");
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        return super.onOptionsItemSelected(item);
+        getRemoteData();
     }
-
 
     /**
      * This function will request data from the server
      */
     public void getRemoteData() {
+        setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
         ApiClient.getCacaoApiInterface().getGuides(new Callback<List<GuideObject>>() {
             @Override
@@ -62,6 +57,7 @@ public class MainActivity extends CacaoActivity {
                 if (response.getStatus() == 200) {
                     postData(guideObjects);
                 }
+                setProgressBarIndeterminateVisibility(Boolean.FALSE);
             }
 
             @Override
@@ -73,16 +69,39 @@ public class MainActivity extends CacaoActivity {
     }
 
     /**
-     * Data from backend, let's fill the listview !
+     * Data from backend, let's fill the listview!
      * @param guides
      */
     public void postData(List<GuideObject> guides) {
+        Map<String, List<VersionObject>> hashMap = new LinkedHashMap<>();
+
         if (guides.size() > 0) {
             for (GuideObject guide : guides) {
+                List<VersionObject> versions = new ArrayList<>();
+
                 for (VersionObject version: guide.getmVersions()) {
-                    Utils.toastMessage(this, version.getmName());
+                    versions.add(version);
                 }
+                hashMap.put(guide.getmName(), versions);
             }
         }
+
+       GuideAdapter adapter = new GuideAdapter(MainActivity.this, hashMap);
+       setListAdapter(adapter);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 }
