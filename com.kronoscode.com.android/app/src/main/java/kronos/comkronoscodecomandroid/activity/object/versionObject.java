@@ -1,13 +1,19 @@
 package kronos.comkronoscodecomandroid.activity.object;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by jhon on 2/3/15.
  */
-public class versionObject {
+public class VersionObject {
 
+    @SerializedName("name")
     private String mName;
+    @SerializedName("file")
     private String mFile;
+    @SerializedName("date")
     private String mDate;
+    @SerializedName("num_version")
     private String mNumVersion;
 
     public String getmName() {

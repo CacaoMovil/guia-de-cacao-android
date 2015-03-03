@@ -5,6 +5,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import kronos.comkronoscodecomandroid.R;
+import kronos.comkronoscodecomandroid.activity.api.ApiClient;
+import kronos.comkronoscodecomandroid.activity.object.VersionObject;
+import kronos.comkronoscodecomandroid.activity.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class MainActivity extends CacaoActivity {
@@ -13,6 +19,25 @@ public class MainActivity extends CacaoActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        // Testing
+        setProgressBarIndeterminateVisibility(Boolean.TRUE);
+
+        ApiClient.getCacaoApiInterface().getGuides(new Callback<VersionObject>() {
+            @Override
+            public void success(VersionObject result, Response response) {
+                if (response.getStatus() == 200) {
+                    Utils.toastMessage(getBaseContext(), result.getmDate());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                Utils.toastMessage(getBaseContext(), error.getMessage());
+            }
+        });
     }
 
 

@@ -1,7 +1,6 @@
-package kronos.comkronoscodecomandroid.activity.Api;
+package kronos.comkronoscodecomandroid.activity.api;
 
-import org.json.JSONObject;
-
+import kronos.comkronoscodecomandroid.activity.object.VersionObject;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.GET;
@@ -35,8 +34,8 @@ public final class ApiClient {
     public interface cacaoApiInterface {
 
         // Get guides
-        @GET("/guides")
-        void getGuides (Callback <JSONObject> callBack);
+        @GET("/guides/?format=json")
+        void getGuides (Callback <VersionObject> callBack);
 
     }
 }
