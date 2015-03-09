@@ -2,7 +2,9 @@
   "type": "content-provider",
   "packageName": "com.kronoscode.cacao.android.app",
   "databaseName": "cacao",
-  "databaseVersion": 2,
+  "databaseVersion": 6
+
+  ,
   "models": [
     {
       "name": "Guide",
@@ -34,19 +36,11 @@
                 "name":"num_version"
             },
             {
-                "type":"long",
-                "name":"guide_id"
+                "type":"String",
+                "name":"path"
             }
         ],
         "parcelable": true
     }
-  ],
-    "relationships": [
-      {
-        "parent": "Guide",
-        "child": "GuideVersion",
-        "parent_column": "_id",
-        "child_column": "guide_id"
-      }
-    ]
+  ]
 }

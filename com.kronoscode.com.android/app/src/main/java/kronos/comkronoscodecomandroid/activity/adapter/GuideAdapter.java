@@ -1,7 +1,7 @@
 package kronos.comkronoscodecomandroid.activity.adapter;
 
 import android.content.Context;
-import android.text.Html;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,21 +10,25 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.kronoscode.cacao.android.app.model.GuideVersion;
+
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import kronos.comkronoscodecomandroid.R;
-import kronos.comkronoscodecomandroid.activity.object.VersionObject;
+import kronos.comkronoscodecomandroid.activity.utils.Utils;
 
 public class GuideAdapter extends BaseExpandableListAdapter implements Filterable {
 
-	private Map<String, List<VersionObject>> mChildrenList, mChildrenListFilter;
+	private Map<String, List<GuideVersion>> mChildrenList, mChildrenListFilter;
     private final LayoutInflater mInflater;
 	private Context context;
 
     public GuideAdapter(Context context,
-                        Map<String, List<VersionObject>> children) {
+                        Map<String, List<GuideVersion>> children) {
 		this.context = context;
 		this.mChildrenList = children;
         this.mChildrenListFilter = children;
@@ -76,15 +80,24 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
             holder.mName = (TextView)convertView.findViewById(R.id.name);
             holder.mDate = (TextView)convertView.findViewById(R.id.date);
             holder.mVersion = (TextView)convertView.findViewById(R.id.version);
+            holder.mState = (TextView)convertView.findViewById(R.id.state);
 
             convertView.setTag(holder);
         } else holder = (ChildrenHolder)convertView.getTag();
 
-        VersionObject version = (VersionObject) getChild(groupPosition, childPosition);
+        GuideVersion version = (GuideVersion) getChild(groupPosition, childPosition);
 
-        holder.mName.setText((version.getmName()));
-        holder.mDate.setText((version.getmDate()));
-        holder.mVersion.setText((version.getmNumVersion()));
+        holder.mName.setText((version.getName()));
+        holder.mDate.setText("Fecha: " + (version.getDate()));
+        holder.mVersion.setText("Version: " + (version.getNumVersion()));
+
+        if (Utils.checkIfFolderExist(Utils.UNZIP_DIR +  Utils.getNameFromPath(version.getFile()))) {
+            holder.mState.setText(" Descargado");
+            holder.mState.setTextColor(Color.RED);
+        } else {
+            holder.mState.setText(" No descargado");
+            holder.mState.setTextColor(Color.BLACK);
+        }
 
         return convertView;
 	}
@@ -106,7 +119,7 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
         convertView.setFocusable(false);
         convertView.setSelected(false);
 
-        holder.group.setText(Html.fromHtml(group));
+        holder.group.setText(group);
 
         return convertView;
 	}
@@ -121,26 +134,22 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
 
     @Override
     public Filter getFilter() {
-        return null;
-    }
-
-    /*@Override
-    public Filter getFilter() {
         return new Filter() {
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint,
                                           FilterResults results) {
                 try {
-                    if (results.count==children2.size()) {
-                        children= children2;
+
+                    if (results.count == mChildrenListFilter.size()) {
+                        mChildrenList = mChildrenListFilter;
                         notifyDataSetChanged();
                     } else if(results.count>0) {
-                        children =  (Map<String, List<Enlace>>) results.values;
+                        mChildrenList = (Map<String, List<GuideVersion>>) results.values;
                         notifyDataSetChanged();
                     } else {
-                        children= children2;
-                        EnlaceAdapter.this.notifyDataSetChanged();
+                        mChildrenList = mChildrenListFilter;
+                        GuideAdapter.this.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -152,19 +161,19 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
                 FilterResults results = new FilterResults();
 
                 if (constraint == null || constraint.length() == 0) {
-                    children =  children2;
-                    results.count = children2.size();
+                    mChildrenList =  mChildrenListFilter;
+                    results.count = mChildrenListFilter.size();
 
                 } else {
-                    Map<String, List<Enlace>> filteredRowItems =  new LinkedHashMap<String, List<Enlace>>();
+                    Map<String, List<GuideVersion>> filteredRowItems =  new LinkedHashMap<String, List<GuideVersion>>();
 
-                    for (String key : children.keySet()){
-                        ArrayList<Enlace> newValues = new ArrayList<Enlace>();
-                        for (Iterator<Enlace> iterator = children.get(key).iterator(); iterator
+                    for (String key : mChildrenList.keySet()) {
+                        ArrayList<GuideVersion> newValues = new ArrayList<>();
+                        for (Iterator<GuideVersion> iterator = mChildrenList.get(key).iterator(); iterator
                                 .hasNext();) {
-                            Enlace item = iterator.next();
+                            GuideVersion item = iterator.next();
 
-                             String violationName = item.getTitle();
+                             String violationName = item.getName();
                             if (violationName.toUpperCase().contains(constraint.toString().toUpperCase())
                                     && !newValues.contains(item)) {
 
@@ -181,7 +190,7 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
                 return results;
             }
         };
-    }*/
+    }
 
     final static class GroupHolder {
         TextView group;
@@ -191,5 +200,6 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
         TextView mName;
         TextView mDate;
         TextView mVersion;
+        TextView mState;
     }
 }

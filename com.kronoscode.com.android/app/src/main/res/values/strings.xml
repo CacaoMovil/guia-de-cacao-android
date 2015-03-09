@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">com.kronoscode.com.android</string>
+    <string name="app_name">Cacao</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="title">Cacao</string>
+    <string name="unzip_msg">Unzipping ... Wait</string>
+    <string name="action_refresh">Refresh</string>
 </resources>

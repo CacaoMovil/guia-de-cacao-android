@@ -1,16 +1,16 @@
 package com.kronoscode.cacao.android.app.database;
  
+import com.kronoscode.cacao.android.app.database.table.*;
+ 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-import com.kronoscode.cacao.android.app.database.table.GuideTable;
-import com.kronoscode.cacao.android.app.database.table.GuideVersionTable;
  
-public class    CacaoDatabase extends SQLiteOpenHelper {
+import android.util.Log;
+ 
+public class CacaoDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "cacao.db";
-    private static final int DATABASE_VERSION = 2;    private static final String PRAGMA_FOREIGN_KEY_SCRIPT = "PRAGMA foreign_keys = ON;"; 
+    private static final int DATABASE_VERSION = 6; 
     public static final String TAG = "CacaoDatabase";
  
     public CacaoDatabase(final Context context) {
@@ -27,12 +27,6 @@ public class    CacaoDatabase extends SQLiteOpenHelper {
     @Override
     public final void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
         upgrade(db, oldVersion, newVersion);
-    }
- 
-    @Override
-    public void onOpen(SQLiteDatabase db) {
-        super.onOpen(db);
-        db.execSQL(PRAGMA_FOREIGN_KEY_SCRIPT);
     }
   
     private void dropTablesAndCreate(final SQLiteDatabase db) {

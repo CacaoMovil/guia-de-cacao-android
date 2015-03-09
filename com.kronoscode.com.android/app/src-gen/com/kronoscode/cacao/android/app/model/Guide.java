@@ -2,19 +2,20 @@ package com.kronoscode.cacao.android.app.model;
  
 import android.content.ContentValues;
 import android.database.Cursor;
- 
 import android.os.Parcel;
 import android.os.Parcelable;
-   
-import com.kronoscode.cacao.android.app.database.table.GuideTable; 
-  
+
+import com.google.gson.annotations.SerializedName;
+import com.kronoscode.cacao.android.app.database.table.GuideTable;
+
 import java.util.ArrayList;
 import java.util.List;
- 
+
 public class Guide implements Parcelable {
     private transient long mRowId;
-    private String mName; 
-  
+    @SerializedName("name")
+    private String mName;
+
     private transient ContentValues mValues = new ContentValues();
  
     public Guide() {}
@@ -90,8 +91,21 @@ public class Guide implements Parcelable {
  
         return list;
     }
- 
+
+
     // BEGIN PERSISTED SECTION - put custom methods here
+
+    @SerializedName("versions")
+    private List<GuideVersion> mVersions;
+
+    public List<GuideVersion> getmVersions() {
+        return mVersions;
+    }
+
+    public void setmVersions(List<GuideVersion> mVersions) {
+        this.mVersions = mVersions;
+    }
+
 
     // END PERSISTED SECTION
 }

@@ -5,19 +5,25 @@ import android.database.Cursor;
  
 import android.os.Parcel;
 import android.os.Parcelable;
-   
-import com.kronoscode.cacao.android.app.database.table.GuideVersionTable; 
+
+import com.google.gson.annotations.SerializedName;
+import com.kronoscode.cacao.android.app.database.table.GuideVersionTable;
   
 import java.util.ArrayList;
 import java.util.List;
  
 public class GuideVersion implements Parcelable {
     private transient long mRowId;
-    private String mName; 
-    private String mFile; 
-    private String mDate; 
-    private String mNumVersion; 
-    private long mGuideId; 
+    @SerializedName("name")
+    private String mName;
+    @SerializedName("file")
+    private String mFile;
+    @SerializedName("date")
+    private String mDate;
+    @SerializedName("num_version")
+    private String mNumVersion;
+
+    private String mPath; 
   
     private transient ContentValues mValues = new ContentValues();
  
@@ -34,7 +40,7 @@ public class GuideVersion implements Parcelable {
         setFile(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.FILE))); 
         setDate(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.DATE))); 
         setNumVersion(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.NUM_VERSION))); 
-        setGuideId(cursor.getLong(cursor.getColumnIndex(prefix + GuideVersionTable.GUIDE_ID))); 
+        setPath(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.PATH))); 
     }
  
     public GuideVersion(Parcel parcel) {
@@ -48,7 +54,7 @@ public class GuideVersion implements Parcelable {
  
         setNumVersion(parcel.readString()); 
  
-        setGuideId(parcel.readLong()); 
+        setPath(parcel.readString()); 
     }
     
     @Override
@@ -68,7 +74,7 @@ public class GuideVersion implements Parcelable {
  
         parcel.writeString(getNumVersion()); 
  
-        parcel.writeLong(getGuideId()); 
+        parcel.writeString(getPath()); 
     }
  
     public static final Creator<GuideVersion> CREATOR = new Creator<GuideVersion>() {
@@ -106,9 +112,9 @@ public class GuideVersion implements Parcelable {
         mValues.put(GuideVersionTable.NUM_VERSION, numVersion);
     }
  
-    public final void setGuideId(long guideId) {
-        mGuideId = guideId;
-        mValues.put(GuideVersionTable.GUIDE_ID, guideId);
+    public final void setPath(String path) {
+        mPath = path;
+        mValues.put(GuideVersionTable.PATH, path);
     }
   
     public long getRowId() {
@@ -131,8 +137,8 @@ public class GuideVersion implements Parcelable {
         return mNumVersion;
     }
  
-    public long getGuideId() {
-        return mGuideId;
+    public String getPath() {
+        return mPath;
     }
   
     public ContentValues getContentValues() {

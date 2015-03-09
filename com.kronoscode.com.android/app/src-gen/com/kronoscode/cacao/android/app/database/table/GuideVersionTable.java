@@ -15,13 +15,13 @@ public final class GuideVersionTable {
  
     public static final String NUM_VERSION = "num_version"; 
  
-    public static final String GUIDE_ID = "guide_id"; 
+    public static final String PATH = "path"; 
   
-    public static final String[] ALL_COLUMNS = new String[] { _ID, NAME, FILE, DATE, NUM_VERSION, GUIDE_ID };
+    public static final String[] ALL_COLUMNS = new String[] { _ID, NAME, FILE, DATE, NUM_VERSION, PATH };
  
-    public static final String SQL_CREATE = "CREATE TABLE guideversion ( _id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT, file TEXT, date TEXT, num_version TEXT, guide_id TEXT, FOREIGN KEY(guide_id) REFERENCES guide(_id)  )";
+    public static final String SQL_CREATE = "CREATE TABLE guideversion ( _id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT, file TEXT, date TEXT, num_version TEXT, path TEXT )";
  
-    public static final String SQL_INSERT = "INSERT INTO guideversion ( name, file, date, num_version, guide_id ) VALUES ( ?, ?, ?, ?, ? )";
+    public static final String SQL_INSERT = "INSERT INTO guideversion ( name, file, date, num_version, path ) VALUES ( ?, ?, ?, ?, ? )";
  
     public static final String SQL_DROP = "DROP TABLE IF EXISTS guideversion";
  

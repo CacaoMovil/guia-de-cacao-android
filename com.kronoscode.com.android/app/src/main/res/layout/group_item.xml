@@ -1,35 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
     android:layout_width="match_parent"
-	android:layout_height="match_parent">
-
-	<TextView
-        android:layout_height="wrap_content"
-        android:textColor="#7a7a7a"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:textStyle="normal"
-		android:layout_width="match_parent"
-        android:id="@+id/name" />
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#7a7a7a"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:textStyle="normal"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/date"
         android:layout_width="match_parent"
-        android:id="@+id/date" />
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="@android:color/black"
+        android:textStyle="normal" />
 
 
     <TextView
+        android:id="@+id/version"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#7a7a7a"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:textStyle="normal"
-        android:layout_width="match_parent"
-        android:id="@+id/version" />
+        android:textColor="@android:color/black"
+        android:textStyle="normal" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Estado:"
+            android:textColor="@android:color/black"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/holo_green_dark"
+            android:textStyle="normal" />
+
+    </LinearLayout>
 
 </LinearLayout>
