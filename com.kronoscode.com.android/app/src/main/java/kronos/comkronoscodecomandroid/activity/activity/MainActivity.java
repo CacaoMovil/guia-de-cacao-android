@@ -118,6 +118,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
             getRemoteData();
+        } else if (id == android.R.id.home) {
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -158,26 +160,33 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      * This function will request data from the server
      */
     public void getRemoteData() {
-        setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
-        ApiClient.getCacaoApiInterface().getGuides(new Callback<List<Guide>>() {
-            @Override
-            public void success(List<Guide> guideObjects, Response response) {
-                if (response.getStatus() == 200) {
-                    postData(guideObjects);
-                } else {
+        if (Utils.isNetworkAvailable(this)) {
+
+            System.out.println("Entro  su");
+            setProgressBarIndeterminateVisibility(Boolean.TRUE);
+
+            ApiClient.getCacaoApiInterface().getGuides(new Callback<List<Guide>>() {
+                @Override
+                public void success(List<Guide> guideObjects, Response response) {
+                    if (response.getStatus() == 200) {
+                        postData(guideObjects);
+                    } else {
+                        postData(null);
+                    }
+                    setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                    Utils.toastMessage(getBaseContext(), error.getMessage());
                     postData(null);
                 }
-                setProgressBarIndeterminateVisibility(Boolean.FALSE);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                setProgressBarIndeterminateVisibility(Boolean.FALSE);
-                Utils.toastMessage(getBaseContext(), error.getMessage());
-                postData(null);
-            }
-        });
+            });
+        } else {
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        }
     }
 
     /**
@@ -189,7 +198,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         // if data  was consumed
         if (guides!=null) {
             // Cleaning tables
-            Utils.CleanTablesLocalTables(this);
+            Utils.cleanLocalTables(this);
 
             if (guides.size() > 0) {
                 for (Guide guide : guides) {
@@ -217,7 +226,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         }
 
         // read from database
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
 
     }
 

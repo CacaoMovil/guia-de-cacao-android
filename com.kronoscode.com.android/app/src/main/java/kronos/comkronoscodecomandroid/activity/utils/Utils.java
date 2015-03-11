@@ -3,6 +3,8 @@ package kronos.comkronoscodecomandroid.activity.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.Handler;
 import android.widget.Toast;
@@ -48,7 +50,7 @@ public class Utils {
      * This function will clean all the tables
      * @param context
      */
-    public static void CleanTablesLocalTables(Activity context) {
+    public static void cleanLocalTables(Activity context) {
         context.getContentResolver().delete(CacaoProvider.GUIDE_CONTENT_URI, null, null);
         context.getContentResolver().delete(CacaoProvider.GUIDEVERSION_CONTENT_URI, null, null);
     }
@@ -112,5 +114,16 @@ public class Utils {
         String[] fileName = zipName[1].split(".zip");
 
         return fileName[0];
+    }
+
+    /**
+     * Check internet connection
+     * @return
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
