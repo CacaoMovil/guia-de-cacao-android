@@ -1,4 +1,4 @@
-package kronos.comkronoscodecomandroid.activity;
+package kronos.comkronoscodecomandroid.activity.activity;
 
 import android.app.ActionBar;
 import android.content.pm.ActivityInfo;

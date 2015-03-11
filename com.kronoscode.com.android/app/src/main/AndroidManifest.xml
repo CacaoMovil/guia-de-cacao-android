@@ -2,13 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kronos.comkronoscodecomandroid" >
 
+    <!-- To access  API: -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,15 +21,19 @@
             </intent-filter>
         </activity>
 
-
         <provider
             android:name="com.kronoscode.cacao.android.app.provider.CacaoProvider"
             android:authorities="com.kronoscode.cacao.android.app.provider.cacao" />
 
+        <activity
+            android:name=".activity.activity.GuieActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activity.activity.WelcomeActivity"
+            android:label="@string/title_activity_welcome" >
+        </activity>
     </application>
-
-    <!-- To access  API: -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

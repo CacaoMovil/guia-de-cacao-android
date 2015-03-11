@@ -1,4 +1,4 @@
-package kronos.comkronoscodecomandroid.activity;
+package kronos.comkronoscodecomandroid.activity.activity;
 
 import android.app.ActionBar;
 import android.app.Dialog;
@@ -384,10 +384,11 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      */
     public void goToFolder(String locaPath) {
         try {
-            Uri uri = Uri.parse(locaPath + "/guia");
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(uri, "resource/folder");
+
+            Intent intent = new Intent(this, GuieActivity.class);
+            intent.putExtra("FILE", locaPath + "/guia/index.html");
             startActivity(intent);
+            this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
         } catch (Exception e) {
             Utils.toastMessage(this, "You need to install a file Explorer");

@@ -31,4 +31,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
+    compile 'com.android.support:support-v4:21.0.3'
 }
