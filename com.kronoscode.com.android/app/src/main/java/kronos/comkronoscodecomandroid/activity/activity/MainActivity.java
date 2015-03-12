@@ -163,7 +163,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         if (Utils.isNetworkAvailable(this)) {
 
-            System.out.println("Entro  su");
             setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
             ApiClient.getCacaoApiInterface().getGuides(new Callback<List<Guide>>() {
@@ -185,7 +184,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 }
             });
         } else {
-            getLoaderManager().restartLoader(LOADER_ID, null, this);
+            restartLoader();
         }
     }
 
@@ -226,8 +225,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         }
 
         // read from database
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
-
+        restartLoader();
     }
 
     @Override
@@ -382,7 +380,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 mDialog.dismiss();
                 Utils.cleanDir(Utils.ZIP_DIR);
 
-                getRemoteData();
+                restartLoader();
             }
         }
     }
@@ -431,4 +429,10 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         startActivity(intent);
     }
 
+    /**
+     * Load data from database
+     */
+    public void restartLoader() {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
 }

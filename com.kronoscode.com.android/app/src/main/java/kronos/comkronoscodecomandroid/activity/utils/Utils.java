@@ -56,23 +56,32 @@ public class Utils {
     }
 
     /**
-     * This function will check if an specific zone contains schedule
      * @param context
-     * @param guideId
+     * @param groupName
      * @return
      */
-    public static List<GuideVersion> getVersionsFromGuide(Context context, String guideId) {
+    public static List<GuideVersion> getVersionsFromGuide(Context context, String groupName) {
         List<GuideVersion> versions = new ArrayList<>();
 
         Cursor cursor = context.getContentResolver().query(CacaoProvider.GUIDEVERSION_CONTENT_URI, null, GuideVersionTable._ID, null,
-                GuideVersionTable._ID + " ASC");
+                GuideVersionTable.NUM_VERSION + " DESC");
+
+        int position = 0;
+
         do {
             if (cursor != null && cursor.moveToFirst()) {
+             
                 do {
-                    String groupName = cursor.getString(cursor.getColumnIndex(GuideVersionTable.NAME));
-                    if (groupName.equals(guideId)) {
-                        versions.add(new GuideVersion(cursor, false));
+                    String childName = cursor.getString(cursor.getColumnIndex(GuideVersionTable.NAME));
+                    String fileName = cursor.getString(cursor.getColumnIndex(GuideVersionTable.FILE));
+
+                    if (groupName.equals(childName)) {
+                        if (position == 0 || checkIfFolderExist(Utils.UNZIP_DIR + getNameFromPath(fileName))) {
+                            versions.add(new GuideVersion(cursor, false));
+                        }
+                        position =  position  + 1;
                     }
+
                 } while (cursor.moveToNext());
             }
         } while (cursor != null ? cursor.moveToNext() : false);
