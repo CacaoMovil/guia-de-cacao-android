@@ -117,7 +117,12 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            getRemoteData();
+
+            if(Utils.isNetworkAvailable(this)) {
+                getRemoteData();
+            } else {
+                Utils.toastMessage(this, "Unable to download, no internet connection configured");
+            }
         } else if (id == android.R.id.home) {
             finish();
         }

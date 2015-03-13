@@ -70,7 +70,7 @@ public class Utils {
 
         do {
             if (cursor != null && cursor.moveToFirst()) {
-             
+
                 do {
                     String childName = cursor.getString(cursor.getColumnIndex(GuideVersionTable.NAME));
                     String fileName = cursor.getString(cursor.getColumnIndex(GuideVersionTable.FILE));
