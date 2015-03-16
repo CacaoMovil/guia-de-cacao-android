@@ -81,6 +81,7 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
             holder.mDate = (TextView)convertView.findViewById(R.id.date);
             holder.mVersion = (TextView)convertView.findViewById(R.id.version);
             holder.mState = (TextView)convertView.findViewById(R.id.state);
+            holder.mAction= (TextView)convertView.findViewById(R.id.action);
 
             convertView.setTag(holder);
         } else holder = (ChildrenHolder)convertView.getTag();
@@ -93,10 +94,12 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
 
         if (Utils.checkIfFolderExist(Utils.UNZIP_DIR +  Utils.getNameFromPath(version.getFile()))) {
             holder.mState.setText(" Descargado");
-            holder.mState.setTextColor(Color.RED);
+            holder.mAction.setText(R.string.open);
+            holder.mState.setTextColor(Color.GREEN);
         } else {
             holder.mState.setText(" No descargado");
-            holder.mState.setTextColor(Color.BLACK);
+            holder.mAction.setText(R.string.download);
+            holder.mState.setTextColor(Color.RED);
         }
 
         return convertView;
@@ -201,5 +204,6 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
         TextView mDate;
         TextView mVersion;
         TextView mState;
+        TextView mAction;
     }
 }

@@ -13,14 +13,14 @@ import java.io.File;
 import kronos.comkronoscodecomandroid.R;
 import kronos.comkronoscodecomandroid.activity.utils.Utils;
 
-public class GuieActivity extends Activity {
+public class GuideActivity extends Activity {
 
     private WebView mBrowser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guie);
+        setContentView(R.layout.activity_guide);
 
         ActionBar actionBar = getActionBar();
 

@@ -27,7 +27,7 @@
             android:authorities="com.kronoscode.cacao.android.app.provider.cacao" />
 
         <activity
-            android:name=".activity.activity.GuieActivity"
+            android:name=".activity.activity.GuideActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme" >
         </activity>

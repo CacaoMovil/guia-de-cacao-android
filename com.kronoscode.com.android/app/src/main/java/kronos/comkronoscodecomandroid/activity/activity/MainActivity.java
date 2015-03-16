@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -121,7 +122,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             if(Utils.isNetworkAvailable(this)) {
                 getRemoteData();
             } else {
-                Utils.toastMessage(this, "Unable to download, no internet connection configured");
+                Utils.toastMessage(this, getString(R.string.internet_not_available));
             }
         } else if (id == android.R.id.home) {
             finish();
@@ -134,14 +135,17 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     @Override
     public boolean onChildClick(ExpandableListView parent, View v,
                                 int groupPosition, int childPosition, long id) {
-
         GuideVersion version = (GuideVersion) mAdapter
                 .getChild(groupPosition, childPosition);
 
         if (Utils.checkIfFolderExist(Utils.UNZIP_DIR +  Utils.getNameFromPath(version.getFile()))) {
-            goToFolder(Utils.UNZIP_DIR +  Utils.getNameFromPath(version.getFile()));
+            goToFolder(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()));
         } else {
-            downloadFile(Utils.DOMAIN + version.getFile());
+            if (Utils.isNetworkAvailable(this)){
+                downloadFile(Utils.DOMAIN + version.getFile());
+            } else {
+                Utils.toastMessage(this, getString(R.string.internet_not_available));
+            }
         }
 
         return true;
@@ -288,10 +292,10 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             int count;
             try {
                 URL url = new URL(link[0]);
-                URLConnection conexion = url.openConnection();
+                URLConnection connection = url.openConnection();
 
-                conexion.connect();
-                int lengthOfFile = conexion.getContentLength();
+                connection.connect();
+                int lengthOfFile = connection.getContentLength();
 
                 File folder = new File(Utils.ZIP_DIR);
 
@@ -397,7 +401,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     public void goToFolder(String locaPath) {
         try {
 
-            Intent intent = new Intent(this, GuieActivity.class);
+            Intent intent = new Intent(this, GuideActivity.class);
             intent.putExtra("FILE", locaPath + "/guia/index.html");
             startActivity(intent);
             this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
