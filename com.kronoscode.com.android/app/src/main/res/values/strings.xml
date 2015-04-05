@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Cacao</string>
+    <string name="long_app_name">CAJA DE HERRAMIENTAS DE CACAO</string>
+    <string name="app_description">Aprendiendo e innovando sobre el cacao en sistemas agroforestales</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="title">Cacao</string>
     <string name="unzip_msg">Descomprimiendo... Espere un momento</string>
     <string name="action_refresh">Refresh</string>

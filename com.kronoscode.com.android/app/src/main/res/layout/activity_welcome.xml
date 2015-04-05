@@ -3,32 +3,100 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"
+    android:paddingBottom="0dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="kronos.comkronoscodecomandroid.activity.activity.WelcomeActivity">
 
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/welcome_central_image_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/cacao" />
+
+    <TextView
+        android:id="@+id/applicationName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/long_app_name"
+        android:textColor="#ffffffff"
+        android:textSize="@dimen/welcome_title_text_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/longDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/applicationName"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/app_description"
+        android:textColor="#ffffffff"
+        android:textStyle="bold" />
+
+
     <LinearLayout
         android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonsGroup"
+        android:layout_below="@id/longDescription"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_height="wrap_content" >
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/btn_go_to_list"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/welcome_screen_button_width"
             android:layout_height="wrap_content"
-            android:text="@string/lista_guias" />
+            android:layout_marginBottom="5dp"
+            android:background="@android:color/holo_green_dark"
+            android:text="@string/lista_guias"
+            android:textAllCaps="true"
+            android:textColor="#ffffff" />
 
         <Button
             android:id="@+id/btn_go_about"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/welcome_screen_button_width"
             android:layout_height="wrap_content"
             android:layout_below="@id/btn_go_to_list"
-            android:text="@string/title_activity_about" />
+            android:background="@android:color/holo_green_dark"
+            android:text="@string/title_activity_about"
+            android:textAllCaps="true"
+            android:textColor="#ffffff" />
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonsGroup"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/lutheran"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/lutheran" />
+        <ImageView
+            android:id="@+id/kronoscode"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/kronoscode" />
+    </RelativeLayout>
 </RelativeLayout>
