@@ -50,7 +50,6 @@ public class Decompress {
             try {
                 ZipEntry ze;
                 while ((ze = zin.getNextEntry()) != null) {
-                    System.out.println("Entro " + ze.getName());
                     String path = _location + ze.getName();
                     File unzipFile = new File(path);
 

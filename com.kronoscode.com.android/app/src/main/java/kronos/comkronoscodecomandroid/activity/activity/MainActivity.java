@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,15 +22,21 @@ import android.view.Window;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
 
+import com.google.gson.Gson;
 import com.kronoscode.cacao.android.app.database.table.GuideTable;
 import com.kronoscode.cacao.android.app.database.table.GuideVersionTable;
 import com.kronoscode.cacao.android.app.model.Guide;
 import com.kronoscode.cacao.android.app.model.GuideVersion;
 import com.kronoscode.cacao.android.app.provider.CacaoProvider;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,6 +50,7 @@ import java.util.Map;
 import kronos.comkronoscodecomandroid.R;
 import kronos.comkronoscodecomandroid.activity.adapter.GuideAdapter;
 import kronos.comkronoscodecomandroid.activity.api.ApiClient;
+import kronos.comkronoscodecomandroid.activity.object.Content;
 import kronos.comkronoscodecomandroid.activity.utils.Decompress;
 import kronos.comkronoscodecomandroid.activity.utils.Utils;
 import retrofit.Callback;
@@ -60,6 +66,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     private String mFileName;
     private GuideAdapter mAdapter;
     private static final int LOADER_ID = 0;
+    private String mValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,14 +77,28 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         ActionBar actionBar = getActionBar();
 
+        Bundle intent = getIntent().getExtras();
+
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setTitle(getString(R.string.title));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Try to update our local database
-        getRemoteData();
+        if (intent != null) {
+            mValue = intent.getString("value");
+            if (mValue.equals("online")) {
+                // Try to update our local database\
+                getRemoteData();
+            } else {
+                if (getInfoFromSdCard()) {
+                    mFileName = "guia.zip";
+                    new unzipFile().execute(Utils.ZIP_DIR + "guia.zip");
+                } else {
+                    Utils.toastMessage(this, "No zip file found");
+                }
+            }
+        }
     }
 
     @Override
@@ -91,7 +112,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (mAdapter!=null) {
+                if (mAdapter != null) {
                     mAdapter.getFilter().filter(newText);
                 }
                 return true;
@@ -99,7 +120,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (mAdapter!=null) {
+                if (mAdapter != null) {
                     mAdapter.getFilter().filter(query);
                 }
                 return true;
@@ -119,7 +140,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
 
-            if(Utils.isNetworkAvailable(this)) {
+            if (Utils.isNetworkAvailable(this)) {
                 getRemoteData();
             } else {
                 Utils.toastMessage(this, getString(R.string.internet_not_available));
@@ -138,10 +159,10 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         GuideVersion version = (GuideVersion) mAdapter
                 .getChild(groupPosition, childPosition);
 
-        if (Utils.checkIfFolderExist(Utils.UNZIP_DIR +  Utils.getNameFromPath(version.getFile()))) {
+        if (Utils.checkIfFolderExist(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()))) {
             goToFolder(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()));
         } else {
-            if (Utils.isNetworkAvailable(this)){
+            if (Utils.isNetworkAvailable(this)) {
                 downloadFile(Utils.DOMAIN + version.getFile());
             } else {
                 Utils.toastMessage(this, getString(R.string.internet_not_available));
@@ -165,6 +186,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 return null;
         }
     }
+
     /**
      * This function will request data from the server
      */
@@ -199,12 +221,13 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
     /**
      * Data from backend, let's fill the listview!
+     *
      * @param guides
      */
     public void postData(List<Guide> guides) {
 
         // if data  was consumed
-        if (guides!=null) {
+        if (guides != null) {
             // Cleaning tables
             Utils.cleanLocalTables(this);
 
@@ -255,7 +278,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
                 if (!guide.getName().equals("")) {
                     version = Utils.getVersionsFromGuide(getBaseContext(), guide.getName());
-                    if (version.size() >0) {
+                    if (version.size() > 0) {
                         guide.setmVersions(version);
                     }
 
@@ -299,7 +322,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
                 File folder = new File(Utils.ZIP_DIR);
 
-                if(!folder.isDirectory()) {
+                if (!folder.isDirectory()) {
                     folder.mkdirs();
                 }
 
@@ -316,7 +339,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
                 while ((count = input.read(data)) != -1) {
                     total += count;
-                    publishProgress(""+(int)((total*100)/lengthOfFile));
+                    publishProgress("" + (int) ((total * 100) / lengthOfFile));
                     output.write(data, 0, count);
                 }
 
@@ -336,6 +359,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             return null;
 
         }
+
         protected void onProgressUpdate(String... progress) {
             mProgressDialog.setProgress(Integer.parseInt(progress[0]));
         }
@@ -352,6 +376,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      */
     private class unzipFile extends AsyncTask<String, String, String> {
         ProgressDialog mDialog;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -365,6 +390,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             String zipRoot = fileRoot[0];
             try {
                 String[] separated = mFileName.split(".zip");
+
                 Decompress d = new Decompress(zipRoot, Utils.UNZIP_DIR + "/" + separated[0]);
                 try {
                     d.unzip();
@@ -385,17 +411,27 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         @Override
         protected void onPostExecute(String unused) {
-            if (mDialog!=null) {
+            if (mDialog != null) {
                 mDialog.dismiss();
-                Utils.cleanDir(Utils.ZIP_DIR);
 
-                restartLoader();
+                if (mValue.equals("online")) {
+                    Utils.cleanDir(Utils.ZIP_DIR);
+                    restartLoader();
+                } else {
+                    try {
+                        parseLocalJson();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
             }
         }
     }
 
     /**
      * Go to the downloaded folder
+     *
      * @param locaPath
      */
     public void goToFolder(String locaPath) {
@@ -414,6 +450,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
     /**
      * This will call the download and unzip asynctask
+     *
      * @param path
      */
     public void downloadFile(String path) {
@@ -422,6 +459,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
     /**
      * Create view with groups and child
+     *
      * @param hashMap
      */
     public void displayView(Map<String, List<GuideVersion>> hashMap) {
@@ -443,5 +481,41 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      */
     public void restartLoader() {
         getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
+
+    /**
+     * this function will get the guide zip from the sdcard
+     */
+    private boolean getInfoFromSdCard() {
+        return Utils.checkIfFolderExist(Utils.ZIP_DIR + "guia.zip");
+    }
+
+    /**
+     * @throws IOException
+     */
+    private void parseLocalJson() throws IOException {
+
+        BufferedReader reader = new BufferedReader(new FileReader(Utils.UNZIP_DIR + "/guia/guia/manifest.json"));
+        String line, results = "";
+        while ((line = reader.readLine()) != null) {
+            results += line;
+        }
+        reader.close();
+
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(results);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Gson gson = new Gson();
+        Content content;
+        content = gson.fromJson(obj.toString(), Content.class);
+
+        if (content.getContents().size() > 0)
+            postData(content.getContents());
+        else
+            Utils.toastMessage(this, "No content");
     }
 }
