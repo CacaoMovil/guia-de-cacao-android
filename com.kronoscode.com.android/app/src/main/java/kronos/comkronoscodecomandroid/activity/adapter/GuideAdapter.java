@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
     }
 
 	public boolean areAllItemsEnabled() {
-		return true;
+		return false;
 	}
 
 	public Object getChild(int groupPosition, int childPosition) {
@@ -77,29 +78,24 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.group_item,null);
             holder = new ChildrenHolder();
-            //holder.mName = (TextView)convertView.findViewById(R.id.name);
             holder.mDate = (TextView)convertView.findViewById(R.id.date);
             holder.mVersion = (TextView)convertView.findViewById(R.id.version);
-            //holder.mState = (TextView)convertView.findViewById(R.id.state);
-            holder.mAction= (TextView)convertView.findViewById(R.id.action);
+            holder.mAction= (Button)convertView.findViewById(R.id.action);
 
             convertView.setTag(holder);
         } else holder = (ChildrenHolder)convertView.getTag();
 
         GuideVersion version = (GuideVersion) getChild(groupPosition, childPosition);
 
-        //holder.mName.setText((version.getName()));
         holder.mDate.setText("Fecha: " + (version.getDate()));
         holder.mVersion.setText("Version: " + (version.getNumVersion()));
 
+        holder.mAction.setClickable(false);
+
         if (Utils.checkIfFolderExist(Utils.UNZIP_DIR +  Utils.getNameFromPath(version.getFile()))) {
-            //holder.mState.setText(" Descargado");
             holder.mAction.setText(R.string.open);
-            //holder.mState.setTextColor(Color.GREEN);
         } else {
-            //holder.mState.setText(" No descargado");
             holder.mAction.setText(R.string.download);
-            //holder.mState.setTextColor(Color.RED);
         }
 
         return convertView;
@@ -131,7 +127,7 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
             numberDisplay = "0" + String.valueOf(groupPosition+1);
         }
         holder.guideNumber.setText(numberDisplay);
-
+        convertView.setPadding(0, 20, 0, 20);
         return convertView;
 	}
 
@@ -213,6 +209,6 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
         TextView mDate;
         TextView mVersion;
         //TextView mState;
-        TextView mAction;
+        Button mAction;
     }
 }

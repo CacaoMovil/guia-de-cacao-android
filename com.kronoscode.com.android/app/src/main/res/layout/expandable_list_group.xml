@@ -1,35 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:divider="@color/divider_color"
-	android:dividerPadding="2dp"
-	android:showDividers="middle"
-	android:orientation="horizontal"
-	android:background="@color/list_item_background">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/list_item_background"
+    android:orientation="horizontal">
 
-	<TextView
-		android:id="@+id/guide_number"
-		android:textColor="@color/list_item_text_color"
-		android:textStyle="bold"
-		android:layout_width="60dp"
-		android:layout_height="fill_parent"
-		android:textSize="@dimen/list_number_text_size"
-		android:text="01"
-		android:gravity="center">
-	</TextView>
+    <TextView
+        android:id="@+id/guide_number"
+        android:layout_width="60dp"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="01"
+        android:textColor="@color/list_item_text_color"
+        android:textSize="@dimen/list_number_text_size"
+        android:textStyle="bold"></TextView>
 
 
-	<TextView
-		android:id="@+id/name"
-		android:textColor="@color/selected_list_item_text_color"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center|left"
+        android:text="EL CACAO EN SISTEMAS AGROFORESTALES"
         android:textAllCaps="true"
-        android:textStyle="bold"
-		android:text="EL CACAO EN SISTEMAS AGROFORESTALES"
-		android:gravity="center|center_vertical">
-	</TextView>
- 
+        android:textColor="@color/selected_list_item_text_color"
+        android:textStyle="bold"></TextView>
 </LinearLayout>

@@ -19,11 +19,11 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
 
         Button btnList = (Button) findViewById(R.id.btn_go_to_list);
         Button btnAbout = (Button) findViewById(R.id.btn_go_about);
-        Button btnSdCard = (Button) findViewById(R.id.btn_load_sdcard);
+        //Button btnSdCard = (Button) findViewById(R.id.btn_load_sdcard);
 
         btnAbout.setOnClickListener(this);
         btnList.setOnClickListener(this);
-        btnSdCard.setOnClickListener(this);
+        //btnSdCard.setOnClickListener(this);
     }
 
     @Override
@@ -40,10 +40,10 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
                 intent = new Intent(this, aboutActivity.class);
                 break;
 
-            case R.id.btn_load_sdcard:
-                intent = new Intent(this, MainActivity.class);
-                intent.putExtra("value", "sdcard");
-                break;
+            //case R.id.btn_load_sdcard:
+            //    intent = new Intent(this, MainActivity.class);
+            //    intent.putExtra("value", "sdcard");
+            //    break;
         }
 
         startActivity(intent);

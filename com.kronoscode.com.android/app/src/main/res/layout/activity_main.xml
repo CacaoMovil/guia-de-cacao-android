@@ -18,6 +18,10 @@
         android:layout_height="wrap_content"
         android:groupIndicator="@null"
         android:paddingBottom="20dip"
+        android:divider="@drawable/divider"
+        android:dividerHeight="2dp"
+        android:dividerPadding="2dp"
+        android:showDividers="beginning"
         android:background="@color/list_item_background" />
 
 </LinearLayout>

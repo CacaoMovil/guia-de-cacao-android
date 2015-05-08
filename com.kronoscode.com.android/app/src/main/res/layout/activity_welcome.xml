@@ -49,9 +49,9 @@
 
 
     <LinearLayout
+        android:id="@+id/buttonsGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonsGroup"
         android:layout_below="@id/longDescription"
         android:gravity="center"
         android:orientation="vertical">
@@ -76,35 +76,29 @@
             android:textAllCaps="true"
             android:textColor="#ffffff" />
 
-
-        <Button
-            android:id="@+id/btn_load_sdcard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/btn_go_about"
-            android:text="@string/title_load_sdCard" />
-
-
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
         android:layout_below="@id/buttonsGroup"
         android:layout_marginBottom="0dp"
         android:layout_marginTop="30dp"
-        android:layout_alignParentBottom="true"
+        android:gravity="end|bottom"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/lutheran"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
             android:layout_alignParentLeft="true"
             android:src="@drawable/lutheran" />
+
         <ImageView
             android:id="@+id/kronoscode"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_height="80dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/kronoscode" />
     </RelativeLayout>
