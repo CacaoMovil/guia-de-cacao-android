@@ -5,83 +5,48 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="Guia de ejemplo"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="0.6"
-            android:orientation="vertical">
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:singleLine="true"
+            android:text="Fechita"
+            android:textColor="@color/list_item_data_color"
+            android:textStyle="normal" />
 
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="Fechita"
-                android:textColor="@android:color/black"
-                android:textStyle="normal" />
-
-
-            <TextView
-                android:id="@+id/version"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="Version"
-                android:textColor="@android:color/black"
-                android:textStyle="normal" />
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="Estado:"
-                    android:textColor="@android:color/black"
-                    android:textStyle="normal" />
-
-                <TextView
-                    android:id="@+id/state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:textColor="@android:color/holo_green_dark"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-        </LinearLayout>
 
         <TextView
-            android:id="@+id/action"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:text="@string/download"
-            android:textAlignment="center"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            android:id="@+id/version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:singleLine="true"
+            android:text="Version"
+            android:textColor="@color/list_item_data_color"
+            android:textStyle="normal" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/download"
+        android:textAlignment="center"
+        android:focusable="false"
+        android:background="@color/list_item_data_color"
+        android:textColor="@color/selected_list_item_text_color"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="20dp"
+        android:drawableLeft="@drawable/eye_icon"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical" />
+
 
 </LinearLayout>

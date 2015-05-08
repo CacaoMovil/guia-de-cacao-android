@@ -2,12 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/list_item_background"
     android:orientation="vertical">
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_image_height"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:id="@+id/imageView"
+        android:src="@drawable/list_background"
+        android:layout_marginTop="0dp"/>
     <ExpandableListView
         android:id="@+id/android:list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="20dip" />
+        android:groupIndicator="@null"
+        android:paddingBottom="20dip"
+        android:background="@color/list_item_background" />
 
 </LinearLayout>

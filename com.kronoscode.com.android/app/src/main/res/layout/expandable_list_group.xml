@@ -3,17 +3,33 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:background="#f6f6f6">
+	android:divider="@color/divider_color"
+	android:dividerPadding="2dp"
+	android:showDividers="middle"
+	android:orientation="horizontal"
+	android:background="@color/list_item_background">
+
+	<TextView
+		android:id="@+id/guide_number"
+		android:textColor="@color/list_item_text_color"
+		android:textStyle="bold"
+		android:layout_width="60dp"
+		android:layout_height="fill_parent"
+		android:textSize="@dimen/list_number_text_size"
+		android:text="01"
+		android:gravity="center">
+	</TextView>
+
 
 	<TextView
 		android:id="@+id/name"
-		android:textColor="@android:color/holo_green_dark"
-		android:layout_width="wrap_content"
-		android:layout_height="30dip"
+		android:textColor="@color/selected_list_item_text_color"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
         android:textAllCaps="true"
-        android:layout_marginLeft="30dip"
         android:textStyle="bold"
-		android:gravity="center_vertical">
+		android:text="EL CACAO EN SISTEMAS AGROFORESTALES"
+		android:gravity="center|center_vertical">
 	</TextView>
  
 </LinearLayout>

@@ -77,10 +77,10 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
         if (convertView==null) {
             convertView = mInflater.inflate(R.layout.group_item,null);
             holder = new ChildrenHolder();
-            holder.mName = (TextView)convertView.findViewById(R.id.name);
+            //holder.mName = (TextView)convertView.findViewById(R.id.name);
             holder.mDate = (TextView)convertView.findViewById(R.id.date);
             holder.mVersion = (TextView)convertView.findViewById(R.id.version);
-            holder.mState = (TextView)convertView.findViewById(R.id.state);
+            //holder.mState = (TextView)convertView.findViewById(R.id.state);
             holder.mAction= (TextView)convertView.findViewById(R.id.action);
 
             convertView.setTag(holder);
@@ -88,18 +88,18 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
 
         GuideVersion version = (GuideVersion) getChild(groupPosition, childPosition);
 
-        holder.mName.setText((version.getName()));
+        //holder.mName.setText((version.getName()));
         holder.mDate.setText("Fecha: " + (version.getDate()));
         holder.mVersion.setText("Version: " + (version.getNumVersion()));
 
         if (Utils.checkIfFolderExist(Utils.UNZIP_DIR +  Utils.getNameFromPath(version.getFile()))) {
-            holder.mState.setText(" Descargado");
+            //holder.mState.setText(" Descargado");
             holder.mAction.setText(R.string.open);
-            holder.mState.setTextColor(Color.GREEN);
+            //holder.mState.setTextColor(Color.GREEN);
         } else {
-            holder.mState.setText(" No descargado");
+            //holder.mState.setText(" No descargado");
             holder.mAction.setText(R.string.download);
-            holder.mState.setTextColor(Color.RED);
+            //holder.mState.setTextColor(Color.RED);
         }
 
         return convertView;
@@ -116,6 +116,7 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
             convertView = mInflater.inflate(R.layout.expandable_list_group, parent, false);
             holder = new GroupHolder();
             holder.group = (TextView)convertView.findViewById(R.id.name);
+            holder.guideNumber = (TextView)convertView.findViewById(R.id.guide_number);
             convertView.setTag(holder);
         } else holder = (GroupHolder)convertView.getTag();
 
@@ -123,6 +124,13 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
         convertView.setSelected(false);
 
         holder.group.setText(group);
+        String numberDisplay;
+        if (groupPosition > 10){
+            numberDisplay = String.valueOf(groupPosition+1);
+        } else{
+            numberDisplay = "0" + String.valueOf(groupPosition+1);
+        }
+        holder.guideNumber.setText(numberDisplay);
 
         return convertView;
 	}
@@ -197,13 +205,14 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
 
     final static class GroupHolder {
         TextView group;
+        TextView guideNumber;
     }
 
     final static class ChildrenHolder {
-        TextView mName;
+        //TextView mName;
         TextView mDate;
         TextView mVersion;
-        TextView mState;
+        //TextView mState;
         TextView mAction;
     }
 }
