@@ -44,6 +44,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_about"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activity.activity.FilesProviderActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.Holo.Light.Dialog"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

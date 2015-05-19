@@ -27,7 +27,6 @@ public class Utils {
     public static final String DOMAIN = "http://cacao.kronoscode.com";
     public static final String ZIP_DIR = Environment.getExternalStorageDirectory().getPath() + "/zip_guias/";
     public static final String UNZIP_DIR = Environment.getExternalStorageDirectory().getPath() + "/guias/";
-    //public static final String UNZIP_SDCARD_DIR = Environment.getExternalStorageDirectory().getPath() + "/guias_sdcard/";
     public static final String LINK_SPLIT = "descargas/";
 
     /**

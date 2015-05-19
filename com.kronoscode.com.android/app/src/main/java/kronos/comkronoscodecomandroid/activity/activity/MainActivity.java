@@ -92,8 +92,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 getRemoteData();
             } else {
                 if (getInfoFromSdCard()) {
-                    mFileName = "guia.zip";
-                    new unzipFile().execute(Utils.ZIP_DIR + "guia.zip");
+                    mFileName = intent.getString("filename");
+                    new unzipFile().execute(Utils.ZIP_DIR + intent.getString("filename"));
                 } else {
                     Utils.toastMessage(this, "No zip file found");
                 }
@@ -415,7 +415,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 mDialog.dismiss();
 
                 if (mValue.equals("online")) {
-                    Utils.cleanDir(Utils.ZIP_DIR);
+                    //Utils.cleanDir(Utils.ZIP_DIR);
                     restartLoader();
                 } else {
                     try {
@@ -488,7 +488,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      * this function will get the guide zip from the sdcard
      */
     private boolean getInfoFromSdCard() {
-        return Utils.checkIfFolderExist(Utils.ZIP_DIR + "guia.zip");
+        //return Utils.checkIfFolderExist(Utils.ZIP_DIR + "guia.zip");
+        return true;
     }
 
     /**
@@ -496,7 +497,9 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      */
     private void parseLocalJson() throws IOException {
 
-        BufferedReader reader = new BufferedReader(new FileReader(Utils.UNZIP_DIR + "/guia/guia/manifest.json"));
+        String[] file = mFileName.split(".zip");
+
+        BufferedReader reader = new BufferedReader(new FileReader(Utils.UNZIP_DIR + file[0] + "/guia/manifest.json"));
         String line, results = "";
         while ((line = reader.readLine()) != null) {
             results += line;
@@ -512,6 +515,25 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         Gson gson = new Gson();
         Content content;
         content = gson.fromJson(obj.toString(), Content.class);
+
+        int i = 1;
+
+        for (Guide guide : content.getContents()) {
+
+            for (GuideVersion version: guide.getmVersions()) {
+                if (Integer.parseInt(content.getGuide_id()) == i) {
+                    if (version.getNumVersion().equals(content.getGuide_version())) {
+
+                        String[] separated = version.getFile().split("descargas/");
+                        String[] separated2 = separated[1].split(".zip");
+                        File from = new File(Utils.UNZIP_DIR + file);
+                        File to = new File(Utils.UNZIP_DIR +  separated2[0]);
+                        from.renameTo(to);
+                    }
+                }
+            }
+            i++;
+        }
 
         if (content.getContents().size() > 0)
             postData(content.getContents());

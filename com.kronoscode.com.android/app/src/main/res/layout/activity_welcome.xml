@@ -76,6 +76,20 @@
             android:textAllCaps="true"
             android:textColor="#ffffff" />
 
+
+        <Button
+            android:id="@+id/btn_go_sdcard"
+            android:layout_width="@dimen/welcome_screen_button_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:layout_below="@id/btn_go_to_list"
+            android:background="@android:color/holo_green_dark"
+            android:text="@string/title_load_sdCard"
+            android:textAllCaps="true"
+            android:textColor="#ffffff" />
+
+
     </LinearLayout>
 
     <RelativeLayout
