@@ -415,12 +415,13 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 mDialog.dismiss();
 
                 if (mValue.equals("online")) {
-                    //Utils.cleanDir(Utils.ZIP_DIR);
+                    Utils.cleanDir(Utils.ZIP_DIR + mFileName);
                     restartLoader();
                 } else {
                     try {
                         parseLocalJson();
                     } catch (IOException e) {
+                        Utils.toastMessage(getBaseContext(), "No se encontro archivo manifest");
                         e.printStackTrace();
                     }
 
@@ -526,7 +527,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
                         String[] separated = version.getFile().split("descargas/");
                         String[] separated2 = separated[1].split(".zip");
-                        File from = new File(Utils.UNZIP_DIR + file);
+                        File from = new File(Utils.UNZIP_DIR + file[0]);
                         File to = new File(Utils.UNZIP_DIR +  separated2[0]);
                         from.renameTo(to);
                     }

@@ -93,12 +93,14 @@ public class Utils {
      * Cleaning all compress files after unzip
      */
     public static void cleanDir(String folder) {
-        File dir = new File(folder);
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
-                new File(dir, children[i]).delete();
-            }
+        File file = new File(folder);
+
+        if (file.exists()) {
+            ///String[] children = dir.list();
+            //for (int i = 0; i < children.length; i++) {
+              //  new File(dir, children[i]).delete();
+            //}
+            file.delete();
         }
     }
 
