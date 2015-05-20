@@ -96,10 +96,6 @@ public class Utils {
         File file = new File(folder);
 
         if (file.exists()) {
-            ///String[] children = dir.list();
-            //for (int i = 0; i < children.length; i++) {
-              //  new File(dir, children[i]).delete();
-            //}
             file.delete();
         }
     }

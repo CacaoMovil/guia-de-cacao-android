@@ -67,6 +67,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     private GuideAdapter mAdapter;
     private static final int LOADER_ID = 0;
     private String mValue;
+    private static final int REQUEST_ID = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,15 +90,11 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         if (intent != null) {
             mValue = intent.getString("value");
             if (mValue.equals("online")) {
-                // Try to update our local database\
+                // Try to update our local database
                 getRemoteData();
             } else {
-                if (getInfoFromSdCard()) {
-                    mFileName = intent.getString("filename");
-                    new unzipFile().execute(Utils.ZIP_DIR + intent.getString("filename"));
-                } else {
-                    Utils.toastMessage(this, "No zip file found");
-                }
+                mFileName = intent.getString("filename");
+                new unzipFile().execute(Utils.ZIP_DIR + intent.getString("filename"));
             }
         }
     }
@@ -147,6 +145,9 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             }
         } else if (id == android.R.id.home) {
             finish();
+        } else if (id == R.id.action_import) {
+            Intent  intent = new Intent(this, FilesProviderActivity.class);
+            startActivityForResult(intent, REQUEST_ID);
         }
 
         return super.onOptionsItemSelected(item);
@@ -234,23 +235,26 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             if (guides.size() > 0) {
                 for (Guide guide : guides) {
                     // register guide information
-                    ContentValues values = new ContentValues();
-                    values.put(GuideTable.NAME, guide.getName());
-                    //values.put(GuideTable.ID, counter);
 
-                    getContentResolver().insert(CacaoProvider.GUIDE_CONTENT_URI, values);
-                    List<GuideVersion> versions = new ArrayList<>();
+                    if (guide.getmVersions().size() > 0) {
+                        ContentValues values = new ContentValues();
+                        values.put(GuideTable.NAME, guide.getName());
+                        //values.put(GuideTable.ID, counter);
 
-                    for (GuideVersion version : guide.getmVersions()) {
-                        // register versions information
-                        ContentValues versionValues = new ContentValues();
-                        versionValues.put(GuideVersionTable.NAME, version.getName());
-                        versionValues.put(GuideVersionTable.FILE, version.getFile());
-                        versionValues.put(GuideVersionTable.DATE, version.getDate());
-                        versionValues.put(GuideVersionTable.NUM_VERSION, version.getNumVersion());
+                        getContentResolver().insert(CacaoProvider.GUIDE_CONTENT_URI, values);
+                        List<GuideVersion> versions = new ArrayList<>();
 
-                        getContentResolver().insert(CacaoProvider.GUIDEVERSION_CONTENT_URI, versionValues);
-                        versions.add(version);
+                        for (GuideVersion version : guide.getmVersions()) {
+                            // register versions information
+                            ContentValues versionValues = new ContentValues();
+                            versionValues.put(GuideVersionTable.NAME, version.getName());
+                            versionValues.put(GuideVersionTable.FILE, version.getFile());
+                            versionValues.put(GuideVersionTable.DATE, version.getDate());
+                            versionValues.put(GuideVersionTable.NUM_VERSION, version.getNumVersion());
+
+                            getContentResolver().insert(CacaoProvider.GUIDEVERSION_CONTENT_URI, versionValues);
+                            versions.add(version);
+                        }
                     }
                 }
             }
@@ -540,5 +544,24 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             postData(content.getContents());
         else
             Utils.toastMessage(this, "No content");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == REQUEST_ID) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                // The user picked a file.
+                finish();
+                String result = data.getStringExtra("result");
+                Intent intent;
+                intent = new Intent(this, MainActivity.class);
+                intent.putExtra("value", "sdcard");
+                intent.putExtra("filename", result);
+
+                startActivity(intent);
+            }
+        }
     }
 }
