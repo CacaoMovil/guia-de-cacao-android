@@ -1,7 +1,6 @@
 package kronos.comkronoscodecomandroid.activity.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,6 +156,9 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
                     } else {
                         mChildrenList = mChildrenListFilter;
                         GuideAdapter.this.notifyDataSetChanged();
+                        if (constraint.length()>0) {
+                            Utils.toastMessage(context, context.getString(R.string.no_results));
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

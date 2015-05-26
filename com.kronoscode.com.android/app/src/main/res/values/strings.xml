@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Caja de Herramientas de Cacao</string>
-    <string name="long_app_name">CAJA DE HERRAMIENTAS DE CACAO</string>
+    <string name="app_name">Cacao Móvil</string>
+    <string name="long_app_name">Guías de Cacao</string>
     <string name="app_description">Aprendiendo e innovando sobre el cacao en sistemas agroforestales</string>
 
-    <string name="title">CAJA DE HERRAMIENTAS DE CACAO</string>
+    <string name="title">Guías de Cacao</string>
     <string name="title_files_provider">SDCARD - GUIAS ZIP</string>
 
     <string name="unzip_msg">Descomprimiendo... Espere un momento</string>
@@ -18,5 +18,6 @@
     <string name="download">Descargar</string>
     <string name="open">Abrir</string>
     <string name="internet_not_available">No hay conexión a internet</string>
+    <string name="no_results">No hay resultados</string>
 
 </resources>
