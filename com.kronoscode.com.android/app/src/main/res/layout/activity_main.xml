@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/list_item_background"
     android:orientation="vertical">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_image_height"
@@ -12,11 +13,24 @@
         android:id="@+id/imageView"
         android:src="@drawable/list_background"
         android:layout_marginTop="0dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:id="@+id/empty"
+        android:visibility="gone"
+        android:text="@string/no_results"
+        />
+
     <ExpandableListView
         android:id="@+id/android:list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:groupIndicator="@null"
+        android:layout_below="@+id/imageView"
         android:paddingBottom="20dip"
         android:divider="@drawable/divider"
         android:dividerHeight="2dp"
@@ -24,4 +38,4 @@
         android:showDividers="beginning"
         android:background="@color/list_item_background" />
 
-</LinearLayout>
+</RelativeLayout>

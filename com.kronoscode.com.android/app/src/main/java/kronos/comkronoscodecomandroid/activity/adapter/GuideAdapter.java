@@ -8,6 +8,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kronoscode.cacao.android.app.model.GuideVersion;
@@ -26,12 +27,17 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
 	private Map<String, List<GuideVersion>> mChildrenList, mChildrenListFilter;
     private final LayoutInflater mInflater;
 	private Context context;
+    private ListView mGuideList;
+    private TextView mEmpty;
+
 
     public GuideAdapter(Context context,
-                        Map<String, List<GuideVersion>> children) {
+                        Map<String, List<GuideVersion>> children, ListView guidelist, TextView empty) {
 		this.context = context;
 		this.mChildrenList = children;
         this.mChildrenListFilter = children;
+        this.mGuideList = guidelist;
+        this.mEmpty = empty;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -147,19 +153,20 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
                                           FilterResults results) {
                 try {
 
+                    mGuideList.setVisibility(View.VISIBLE);
+                    mEmpty.setVisibility(View.GONE);
+
                     if (results.count == mChildrenListFilter.size()) {
                         mChildrenList = mChildrenListFilter;
                         notifyDataSetChanged();
-                    } else if(results.count>0) {
+                    } else if(results.count > 0) {
                         mChildrenList = (Map<String, List<GuideVersion>>) results.values;
                         notifyDataSetChanged();
                     } else {
-                        mChildrenList = mChildrenListFilter;
-                        GuideAdapter.this.notifyDataSetChanged();
-                        if (constraint.length()>0) {
-                            Utils.toastMessage(context, context.getString(R.string.no_results));
-                        }
+                        mGuideList.setVisibility(View.GONE);
+                        mEmpty.setVisibility(View.VISIBLE);
                     }
+                    
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
