@@ -14,7 +14,7 @@ import retrofit.http.GET;
  */
 public final class ApiClient {
     // API URL
-    public static final String API_URL = "http://cacao.kronoscode.com/api/v1";
+    public static final String API_URL = "http://cacaomovil.com/api/v1";
 
     private static cacaoApiInterface sCacaoApiInterface;
 
