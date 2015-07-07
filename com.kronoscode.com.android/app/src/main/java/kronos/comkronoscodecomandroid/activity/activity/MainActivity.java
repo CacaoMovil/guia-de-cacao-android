@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.kronoscode.cacao.android.app.database.table.GuideTable;
@@ -68,7 +69,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     private static final int LOADER_ID = 0;
     private String mValue;
     private static final int REQUEST_ID = 1;
-
+    private TextView mEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         setContentView(R.layout.activity_main);
 
         ActionBar actionBar = getActionBar();
+
+        mEmpty = (TextView) findViewById(R.id.empty);
 
         Bundle intent = getIntent().getExtras();
 
@@ -468,7 +471,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      * @param hashMap
      */
     public void displayView(Map<String, List<GuideVersion>> hashMap) {
-        mAdapter = new GuideAdapter(this, hashMap);
+        mAdapter = new GuideAdapter(this, hashMap, getExpandableListView(), mEmpty);
         setListAdapter(mAdapter);
     }
 
