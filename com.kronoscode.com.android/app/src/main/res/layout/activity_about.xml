@@ -7,8 +7,13 @@
     tools:context="kronos.comkronoscodecomandroid.activity.activity.aboutActivity">
 
     <TextView
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer maximus in libero nec bibendum. Phasellus gravida at dolor in vulputate. Pellentesque vestibulum enim sit amet sapien scelerisque, eget finibus neque elementum. Suspendisse tincidunt ipsum eget leo gravida euismod. Nam a velit efficitur nibh pretium tincidunt nec lacinia tellus. Curabitur vehicula sem nec tristique dictum. Maecenas tincidunt est in nisl sagittis, tincidunt placerat arcu sollicitudin. Praesent pretium leo eros, eget interdum tortor ullamcorper vitae. Vivamus rhoncus vitae velit ut ullamcorper. Nunc at ligula convallis, bibendum quam sit amet, ultrices ligula. Aliquam id turpis vel neque faucibus pharetra. Maecenas suscipit elit sed urna ullamcorper, vitae lacinia justo efficitur. Suspendisse a felis eget risus dapibus elementum. Donec sit amet tempor nunc, quis pharetra nibh. Cras at cursus est. Fusce ac dui aliquet, ultrices turpis et, vehicula neque."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:id="@+id/aboutUsTextView"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="insideOverlay"
+        android:fadeScrollbars="true"
+        android:fadingEdge="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:maxLines="30" />
 
 </RelativeLayout>
