@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.kronoscode.cacao.android.app.database.table.GuideVersionTable;
@@ -67,6 +68,8 @@ public class Utils {
                 GuideVersionTable.NUM_VERSION + " DESC");
 
         int position = 0;
+        //flag to check that we already have a downloaded guide on the list
+        boolean thereIsAGuide = false;
 
         do {
             if (cursor != null && cursor.moveToFirst()) {
@@ -76,8 +79,13 @@ public class Utils {
                     String fileName = cursor.getString(cursor.getColumnIndex(GuideVersionTable.FILE));
 
                     if (groupName.equals(childName)) {
-                        if (position == 0 || checkIfFolderExist(Utils.UNZIP_DIR + getNameFromPath(fileName))) {
+                        boolean theGuideExists = checkIfFolderExist(Utils.UNZIP_DIR + getNameFromPath(fileName));
+                        if (position == 0){
                             versions.add(new GuideVersion(cursor, false));
+                            thereIsAGuide = theGuideExists;
+                        } else if (theGuideExists && !thereIsAGuide){
+                            versions.add(new GuideVersion(cursor, false));
+                            thereIsAGuide = true;
                         }
                         position =  position  + 1;
                     }

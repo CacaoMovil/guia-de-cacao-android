@@ -163,9 +163,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                                 int groupPosition, int childPosition, long id) {
         GuideVersion version = (GuideVersion) mAdapter
                 .getChild(groupPosition, childPosition);
-        Log.d("CACAO", Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()));
         if (Utils.checkIfFolderExist(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()))) {
-            Log.d("CACAO", "FOLDER EXISTS");
             goToFolder(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()));
         } else {
             if (Utils.isNetworkAvailable(this)) {
