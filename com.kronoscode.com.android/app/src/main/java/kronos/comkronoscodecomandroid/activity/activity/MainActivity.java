@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -162,8 +163,9 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                                 int groupPosition, int childPosition, long id) {
         GuideVersion version = (GuideVersion) mAdapter
                 .getChild(groupPosition, childPosition);
-
+        Log.d("CACAO", Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()));
         if (Utils.checkIfFolderExist(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()))) {
+            Log.d("CACAO", "FOLDER EXISTS");
             goToFolder(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()));
         } else {
             if (Utils.isNetworkAvailable(this)) {
@@ -398,7 +400,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             try {
                 String[] separated = mFileName.split(".zip");
 
-                Decompress d = new Decompress(zipRoot, Utils.UNZIP_DIR + "/" + separated[0]);
+                Decompress d = new Decompress(zipRoot, Utils.UNZIP_DIR);
                 try {
                     d.unzip();
                 } catch (IOException e) {
@@ -440,13 +442,19 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     /**
      * Go to the downloaded folder
      *
-     * @param locaPath
+     * @param localPath
      */
-    public void goToFolder(String locaPath) {
+    public void goToFolder(String localPath) {
         try {
 
             Intent intent = new Intent(this, GuideActivity.class);
-            intent.putExtra("FILE", locaPath + "/guia/index.html");
+            String oldIndexPath = localPath + "/guia/index.html";
+            Log.d("CACAO", localPath);
+            if (Utils.checkIfFolderExist(oldIndexPath)){
+                intent.putExtra("FILE", localPath + "/guia/index.html");
+            } else {
+                intent.putExtra("FILE", localPath + "/index.html");
+            }
             startActivity(intent);
             this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 

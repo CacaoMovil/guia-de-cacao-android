@@ -4,6 +4,9 @@ package kronos.comkronoscodecomandroid.activity.utils;
  * Created by jhon on 6/3/15.
  */
 
+import android.nfc.Tag;
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -43,6 +46,7 @@ public class Decompress {
                 _location += "/";
             }
             File f = new File(_location);
+            Log.d("CACAO", f.getName());
             if(!f.isDirectory()) {
                 f.mkdirs();
             }
@@ -50,7 +54,8 @@ public class Decompress {
             try {
                 ZipEntry ze;
                 while ((ze = zin.getNextEntry()) != null) {
-                    String path = _location + ze.getName();
+                    String path = _location + ze.getName();;
+                    Log.d("CACAO", path);
                     File unzipFile = new File(path);
 
                     if (ze.isDirectory()) {
@@ -88,7 +93,7 @@ public class Decompress {
             }
         }
         catch (Exception e) {
-            //Log.e(TAG, "Unzip exception", e);
+            Log.e("CACAO", "Unzip exception", e);
         }
     }
 }
