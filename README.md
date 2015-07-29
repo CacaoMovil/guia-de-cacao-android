@@ -6,9 +6,9 @@ La Caja de Herramientas para Cacao: Aprendiendo e Innovando sobre el Manejo Sost
 
 ## Información
 
-El proyecto Caja de Herramientas para Cacao Android esta elaborado usando el lenguaje de programación [Java](http://www.java.com/es/about/) para el sistema operativo [Android](http://www.android.com/), este proyecto hace uso de la libreria [Retrofit](http://square.github.io/retrofit/) para poder obtener las guias de la version web usando una API provista por la version web, la cual fue creada usando [Django Rest Framework](http://www.django-rest-framework.org/).
+El proyecto Caja de Herramientas para Cacao Android esta elaborado usando el lenguaje de programación [Java](http://www.java.com/es/about/) para el sistema operativo [Android](http://www.android.com/), este proyecto hace uso de la librería [Retrofit](http://square.github.io/retrofit/) para poder obtener las guías de la versión web usando una API provista por la versión web, la cual fue creada usando [Django Rest Framework](http://www.django-rest-framework.org/).
 
-## Instalacion
+## Instalación
 
 * Java 1.7
 * Android Studio 1.1
@@ -16,11 +16,11 @@ El proyecto Caja de Herramientas para Cacao Android esta elaborado usando el len
 
 ### Instalando Java
 
-Por defecto Java viene instalado en tu sistema operativo revisa la version en tu sistema ejecutando el siguiente comando, el cual te retornara la version de Java que tienes instalada actualmente
+Por defecto Java viene instalado en tu sistema operativo revisa la versión en tu sistema ejecutando el siguiente comando, el cual te retornara la versión de Java que tienes instalada actualmente
 
 	java -version
 
-En caso de que no tengas instalado Java en tu sistema operativo puedes [dirigirte a su pagina para descargarlo](http://www.java.com/es/download/) y seguir los pasos necesarios durante la instalacion.
+En caso de que no tengas instalado Java en tu sistema operativo puedes [dirigirte a su pagina para descargarlo](http://www.java.com/es/download/) y seguir los pasos necesarios durante la instalación.
 
 ### Instalando Android Studio
 
@@ -35,31 +35,31 @@ En el momento que descargas Android Studio este trae por defecto:
 
 #### Nota
 
-Debes de tomar en cuenta las especificaciones necesarias para cada sistema operativo y asi poder tener un entorno de desarrollo optimo, puedes revisar las especificaciones en este [enlace.](https://developer.android.com/sdk/index.html#Requirements)
+Debes de tomar en cuenta las especificaciones necesarias para cada sistema operativo y así poder tener un entorno de desarrollo óptimo, puedes revisar las especificaciones en este [enlace.](https://developer.android.com/sdk/index.html#Requirements)
 
-### Instalacion de Retrofit
+### Instalación de Retrofit
 
-Retrofit es solo una dependencia del proyecto, por lo cual no necesitas tenerlo instalado en tu entorno el proyecto trae por defecto dentro de sus dependencias esta libreria. Puedes obtener mas información sobre retrofit en este [enlace.](http://square.github.io/retrofit/)
+Retrofit es solo una dependencia del proyecto, por lo cual no necesitas tenerlo instalado en tu entorno el proyecto trae por defecto dentro de sus dependencias esta librería. Puedes obtener mas información sobre retrofit en este [enlace.](http://square.github.io/retrofit/)
 
 ## Configuracion
 
-Una ves que todas las dependencias esten cumplidas, asegurate de tener todo actulizado y seigue los siguiente pasos:
+Una ves que todas las dependencias estén cumplidas, asegurate de tener todo actualizado y sigue los siguiente pasos:
 
-* Abre la aplicacion de Android Studio.
-* Selecciona la direccion donde tengas alojado el codigo fuente de la aplicacion.
+* Abre la aplicación de Android Studio.
+* Selecciona la dirección donde tengas alojado el código fuente de la aplicación.
 * Sincroniza las dependencias del proyecto.
 * Crea un Android Virtual Device desde el AVD Manager.
-    * Si deseas probar en un dispositivo fisico asegurate de tener activado las opciones de desarrollador.
+    * Si deseas probar en un dispositivo físico asegurate de tener activado las opciones de desarrollador.
 * Ejecuta el proyecto y espera a que este compile exitosamente.
 
 ### Nota
 
-Asegurate de tener una conexion a internet disponible para poder descargar las guias de cacao en tu dispositivo Android, de lo contrario la aplicacion no mostrara la información contenida en la API.
+Asegurate de tener una conexión a internet disponible para poder descargar las guías de cacao en tu dispositivo Android, de lo contrario la aplicación no mostrara la información contenida en la API.
 
-Revisa que tengas instalado Google Play Services en su version mas actual.
+Revisa que tengas instalado Google Play Services en su versión mas actual.
 
 
-## Contribucion
+## Contribución
 
 Si quieres contribuir a este proyecto, por favor, lea el archivo de contribuyentes y realice los siguientes pasos
 
