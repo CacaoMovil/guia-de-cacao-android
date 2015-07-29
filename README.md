@@ -2,11 +2,11 @@ Caja de Herramientas para Cacao Android
 ===============
 > Aprendiendo e innovando sobre el cacao en sistemas agroforestales
 
-La Caja de Herramientas para Cacao: Aprendiendo e Innovando sobre el Manejo Sostenible del Cultuvo de Cacao en Sistemas Agroforestales se compone de 10 guías prácticas para pequeños productores de cacao y sus cooperativas en la región de América Latina.
+La Caja de Herramientas para Cacao: Aprendiendo e Innovando sobre el Manejo Sostenible del Cultivo de Cacao en Sistemas Agroforestales se compone de 10 guías prácticas para pequeños productores de cacao y sus cooperativas en la región de América Latina.
 
-## Informacion
+## Información
 
-El projecto Caja de Herramientas para Cacao Android esta elaborado usando el lenguaje de programacion [Java](http://www.java.com/es/about/) para el sistema operativo [Android](http://www.android.com/), este proyecto hace uso de la libreria [Retrofit](http://square.github.io/retrofit/) para poder obtener las guias de la version web usando una API provista por la version web, la cual fue creada usando [Django Rest Framework](http://www.django-rest-framework.org/).
+El proyecto Caja de Herramientas para Cacao Android esta elaborado usando el lenguaje de programación [Java](http://www.java.com/es/about/) para el sistema operativo [Android](http://www.android.com/), este proyecto hace uso de la libreria [Retrofit](http://square.github.io/retrofit/) para poder obtener las guias de la version web usando una API provista por la version web, la cual fue creada usando [Django Rest Framework](http://www.django-rest-framework.org/).
 
 ## Instalacion
 
@@ -39,7 +39,7 @@ Debes de tomar en cuenta las especificaciones necesarias para cada sistema opera
 
 ### Instalacion de Retrofit
 
-Retrofit es solo una dependencia del proyecto, por lo cual no necesitas tenerlo instalado en tu entorno el proyecto trae por defecto dentro de sus dependencias esta libreria. Puedes obtener mas informacion sobre retrofit en este [enlace.](http://square.github.io/retrofit/)
+Retrofit es solo una dependencia del proyecto, por lo cual no necesitas tenerlo instalado en tu entorno el proyecto trae por defecto dentro de sus dependencias esta libreria. Puedes obtener mas información sobre retrofit en este [enlace.](http://square.github.io/retrofit/)
 
 ## Configuracion
 
@@ -54,7 +54,7 @@ Una ves que todas las dependencias esten cumplidas, asegurate de tener todo actu
 
 ### Nota
 
-Asegurate de tener una conexion a internet disponible para poder descargar las guias de cacao en tu dispositivo Android, de lo contrario la aplicacion no mostrara la informacion contenida en la API.
+Asegurate de tener una conexion a internet disponible para poder descargar las guias de cacao en tu dispositivo Android, de lo contrario la aplicacion no mostrara la información contenida en la API.
 
 Revisa que tengas instalado Google Play Services en su version mas actual.
 
