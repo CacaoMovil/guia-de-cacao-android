@@ -126,9 +126,14 @@ public class Utils {
      */
     public static String getNameFromPath(String path) {
         String[] zipName = path.split(LINK_SPLIT);
-        String[] fileName = zipName[1].split(".zip");
+        try{
+            String[] fileName = zipName[1].split(".zip");
+            return fileName[0];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return "";
+        }
 
-        return fileName[0];
+
     }
 
     /**
