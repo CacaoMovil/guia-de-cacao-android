@@ -126,7 +126,7 @@ public class FilesProviderActivity extends ListActivity {
                                                     int which) {
 
                                     Intent returnIntent = new Intent();
-                                    returnIntent.putExtra("result", mFile.getName());
+                                    returnIntent.putExtra("result", mFile.getAbsolutePath());
                                     setResult(RESULT_OK, returnIntent);
                                     finish();
                                 }

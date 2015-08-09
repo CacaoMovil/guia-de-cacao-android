@@ -5,8 +5,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import java.io.File;
 
@@ -38,20 +40,19 @@ public class GuideActivity extends Activity {
             File file = new File(path);
             if (file.exists()) {
                 mBrowser = (WebView) findViewById(R.id.webview);
+                mBrowser.getSettings().setJavaScriptEnabled(true);
                 WebSettings webSettings = mBrowser.getSettings();
                 webSettings.setJavaScriptEnabled(true);
+                webSettings.setBuiltInZoomControls(true);
+
+                mBrowser.setWebViewClient(new WebViewClient());
+                mBrowser.setWebChromeClient(new WebChromeClient());
+
                 mBrowser.loadUrl("file://" + path);
             } else {
                 Utils.toastMessage(this, "Index file does not exist in this folder");
             }
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_guie, menu);
-        return true;
     }
 
     @Override

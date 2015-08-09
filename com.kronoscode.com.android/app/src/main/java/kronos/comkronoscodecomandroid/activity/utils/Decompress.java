@@ -46,7 +46,7 @@ public class Decompress {
                 _location += "/";
             }
             File f = new File(_location);
-            Log.d("CACAO", f.getName());
+            Log.d("CACAODEBUG", f.getName());
             if(!f.isDirectory()) {
                 f.mkdirs();
             }
@@ -93,7 +93,7 @@ public class Decompress {
             }
         }
         catch (Exception e) {
-            Log.e("CACAO", "Unzip exception", e);
+            Log.e("CACAODEBUG", "Unzip exception", e);
         }
     }
 }

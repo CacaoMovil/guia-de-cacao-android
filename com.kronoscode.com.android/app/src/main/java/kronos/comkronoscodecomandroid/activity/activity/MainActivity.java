@@ -50,8 +50,8 @@ import java.util.List;
 import java.util.Map;
 
 import kronos.comkronoscodecomandroid.R;
+import kronos.comkronoscodecomandroid.activity.Api.ApiClient;
 import kronos.comkronoscodecomandroid.activity.adapter.GuideAdapter;
-import kronos.comkronoscodecomandroid.activity.api.ApiClient;
 import kronos.comkronoscodecomandroid.activity.object.Content;
 import kronos.comkronoscodecomandroid.activity.utils.Decompress;
 import kronos.comkronoscodecomandroid.activity.utils.Utils;
@@ -71,6 +71,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     private String mValue;
     private static final int REQUEST_ID = 1;
     private TextView mEmpty;
+    private int mCurrentGroup = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         Bundle intent = getIntent().getExtras();
 
+
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setTitle(getString(R.string.title));
@@ -98,7 +100,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 getRemoteData();
             } else {
                 mFileName = intent.getString("filename");
-                new unzipFile().execute(Utils.ZIP_DIR + intent.getString("filename"));
+                new unzipFile().execute(intent.getString("filename"));
             }
         }
     }
@@ -167,6 +169,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             goToFolder(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()));
         } else {
             if (Utils.isNetworkAvailable(this)) {
+                mCurrentGroup = groupPosition;
                 downloadFile(Utils.DOMAIN + version.getFile());
             } else {
                 Utils.toastMessage(this, getString(R.string.internet_not_available));
@@ -290,10 +293,12 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                     }
 
                     hashMap.put(guide.getName(), guide.getmVersions());
-                    displayView(hashMap);
                 }
 
             } while (data.moveToNext());
+
+            displayView(hashMap);
+
         } else {
             Utils.toastMessage(this, "No information saved");
         }
@@ -447,7 +452,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
             Intent intent = new Intent(this, GuideActivity.class);
             String oldIndexPath = localPath + "/guia/index.html";
-            Log.d("CACAO", localPath);
             if (Utils.checkIfFolderExist(oldIndexPath)){
                 intent.putExtra("FILE", localPath + "/guia/index.html");
             } else {
@@ -479,6 +483,12 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     public void displayView(Map<String, List<GuideVersion>> hashMap) {
         mAdapter = new GuideAdapter(this, hashMap, getExpandableListView(), mEmpty);
         setListAdapter(mAdapter);
+        if (mCurrentGroup != -1){
+            ExpandableListView listView = this.getExpandableListView();
+            listView.expandGroup(mCurrentGroup);
+            listView.setSelectionFromTop(mCurrentGroup, 1);
+            mCurrentGroup = -1;
+        }
     }
 
     /**
@@ -511,9 +521,16 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      */
     private void parseLocalJson() throws IOException {
 
+        String fileName;
         String[] file = mFileName.split(".zip");
+        if (file[0].contains("/")){
+            String[] paths = file[0].split("/");
+            fileName = paths[paths.length-1];
+        } else {
+            fileName = file[0];
+        }
 
-        BufferedReader reader = new BufferedReader(new FileReader(Utils.UNZIP_DIR + file[0] + "/guia/manifest.json"));
+        BufferedReader reader = new BufferedReader(new FileReader(Utils.UNZIP_DIR + fileName + "/manifest.json"));
         String line, results = "";
         while ((line = reader.readLine()) != null) {
             results += line;
