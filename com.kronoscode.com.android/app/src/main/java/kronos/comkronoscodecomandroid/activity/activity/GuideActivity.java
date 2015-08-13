@@ -2,6 +2,7 @@ package kronos.comkronoscodecomandroid.activity.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,10 +41,15 @@ public class GuideActivity extends Activity {
             File file = new File(path);
             if (file.exists()) {
                 mBrowser = (WebView) findViewById(R.id.webview);
-                mBrowser.getSettings().setJavaScriptEnabled(true);
                 WebSettings webSettings = mBrowser.getSettings();
                 webSettings.setJavaScriptEnabled(true);
                 webSettings.setBuiltInZoomControls(true);
+                webSettings.setDomStorageEnabled(true);
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+                    webSettings.setAllowUniversalAccessFromFileURLs(true);
+                    webSettings.setAllowFileAccessFromFileURLs(true);
+                }
 
                 mBrowser.setWebViewClient(new WebViewClient());
                 mBrowser.setWebChromeClient(new WebChromeClient());
