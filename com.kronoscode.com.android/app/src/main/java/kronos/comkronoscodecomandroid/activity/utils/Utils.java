@@ -79,7 +79,7 @@ public class Utils {
                     String fileName = cursor.getString(cursor.getColumnIndex(GuideVersionTable.FILE));
 
                     if (groupName.equals(childName)) {
-                        boolean theGuideExists = checkIfFolderExist(Utils.UNZIP_DIR + getNameFromPath(fileName));
+                        boolean theGuideExists = checkIfFolderExist(Utils.UNZIP_DIR + getNameFromPath(fileName) + "index.html");
                         if (position == 0){
                             versions.add(new GuideVersion(cursor, false));
                             thereIsAGuide = theGuideExists;

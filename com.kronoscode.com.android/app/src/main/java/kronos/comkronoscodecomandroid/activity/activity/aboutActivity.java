@@ -2,25 +2,39 @@ package kronos.comkronoscodecomandroid.activity.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.MenuItem;
-import android.text.method.ScrollingMovementMethod;
-import android.widget.TextView;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import kronos.comkronoscodecomandroid.R;
 
 public class aboutActivity extends Activity {
 
-    TextView mTextView;
+    WebView mWebView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        mTextView = (TextView) findViewById(R.id.aboutUsTextView);
+        mWebView = (WebView) findViewById(R.id.aboutUsWebView);
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.setDomStorageEnabled(true);
 
-        mTextView.setText(Html.fromHtml(getString(R.string.about_us)));
-        mTextView.setMovementMethod(new ScrollingMovementMethod());
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+            webSettings.setAllowUniversalAccessFromFileURLs(true);
+            webSettings.setAllowFileAccessFromFileURLs(true);
+        }
+
+        mWebView.setWebViewClient(new WebViewClient());
+        mWebView.setWebChromeClient(new WebChromeClient());
+
+        mWebView.loadUrl("file:///android_asset/about.html");
+
 
         ActionBar actionBar = getActionBar();
 

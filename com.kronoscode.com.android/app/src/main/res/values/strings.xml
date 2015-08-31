@@ -19,43 +19,4 @@
     <string name="open">Abrir</string>
     <string name="internet_not_available">No hay conexión a internet</string>
     <string name="no_results">No hay resultados</string>
-    <string name="about_us">
-        <![CDATA[ <div class="col-md-12 mb15"><h4><strong>Crédito de las guías impresas</strong></h4>
-        <p>El contenido del as guias esta sujeta a la licencia de reconocimiento no comercial sin obra
-        derivada 3.0 unported de Creative Commons.</p>
-        <p><a href="http://creativecommons.org/licenses/by-nc-nd/3.0/.">http://creativecommons.org/licenses/by-nc-nd/3.0/.</a></p>
-        <table border="0" cellpadding="1" cellspacing="1" style="width:100%"> 	<tbody> 		<tr> 			<td>
-        <p><strong><em>Coordinación de la publicación:</em></strong></p>  			<p>Carolina Aguilar, Lutheran World Relief</p>
-        <p>Falguni Guharay, SIMAS</p>  			<p>&nbsp;</p>  			<p><strong><em>Investigación y redacción</em>:</strong></p>
-        <p>Arturo Avila, COPRODI</p>  			<p>Mercedes Campos, SIMAS</p>  			<p>Falguni Guharay, SIMAS</p>
-        <p>Alvaro Camacho, Lutheran World Relief</p> 			</td> 			<td> 			<p><strong><em>Edición:</em></strong></p>
-        		<p>Mercedes Campos, SIMAS</p>  			<p>&nbsp;</p>  			<p><strong><em>Revisión técnica:</em></strong></p>
-        			<p>Carolina Aguilar, Lutheran World Relief</p>  			<p>Alvaro Camacho, Lutheran World Relief</p>
-        <p>Claudia Pineda, Lutheran World Relief</p>  			<p>&nbsp;</p>
-        <p><strong><em>Fotografías e ilustraciones:</em></strong></p>  			<p>CATIE, IPADE, SIMAS, Lutheran World Relief</p>
-        </td> 			<td> 			<p><strong><em>Validación en campo:</em></strong></p>
-        		<p>Roberto Vallecillo, SIMAS</p>  			<p>Erika Bracamonte, SIMAS</p>  			<p>Mercedes Campos, SIMAS</p>
-        		<p>&nbsp;</p>  			<p><strong><em>Diseño y diagramación:</em></strong></p>
-        		<p>Enmente Impresión: Printex, Managua, Nicaragua</p>  			<p>&nbsp;</p>
-        				<p><strong><em>Diseño y diagramación versión 2015:</em></strong></p>
-        			<p>Kronoscode</p> 			</td> 		</tr> 		<tr> 			<td>&nbsp;</td>
-        		<td>&nbsp;</td> 			<td>&nbsp;</td> 		</tr> 		<tr>
-      				<td>&nbsp;</td> 			<td>&nbsp;</td>
-        						<td>&nbsp;</td> 		</tr> 	</tbody> </table>
-        						<h4><strong>Quién financia? Logo LWR y logo depto: debe incluir la
-        						bandera del departamento de estado</strong></h4>  <p>Nullam quis risus
-        						eget urna mollis ornare vel eu leo. Nulla vitae elit libero, a pharetra augue.
-        						Vestibulum id ligula porta felis euismod semper. Integer posuere erat a
-        						ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla
-        						sed consectetur. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        						 Nullam id dolor id nibh ultricies vehicula ut id elit.</p>  <p>&nbsp;</p>
-        						 <h4><strong>Info copyright (icono CC)</strong></h4>  <p>Nullam quis risus eget
-        						 urna mollis ornare vel eu leo. Nulla vitae elit libero, a pharetra augue. Vestibulum
-        						 id ligula porta felis euismod semper. Integer posuere erat a ante venenatis dapibus
-        						 posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur. Morbi leo risus,
-        						 porta ac consectetur ac, vestibulum at eros. Nullam id dolor id nibh ultricies vehicula
-        						 ut id elit.</p>  <p>&nbsp;</p><h4><strong>Crédito de versión digital</strong></h4><p>La plataforma
-        						 web y aplicacion para telefonos Android “Cacao movil” ha sido diseñada y desarrollada por Kronoscode</p></div>
-        		]]>
-    </string>
 </resources>
