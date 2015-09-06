@@ -61,7 +61,7 @@ import retrofit.client.Response;
 
 
 public class MainActivity extends ExpandableListActivity implements LoaderManager.LoaderCallbacks<Cursor>,
-        ExpandableListView.OnChildClickListener {
+        ExpandableListView.OnChildClickListener{
 
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
     private ProgressDialog mProgressDialog;
@@ -80,6 +80,21 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
+        final ExpandableListView listView = this.getExpandableListView();
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener(){
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id){
+                if (parent.isGroupExpanded(groupPosition)) {
+                    parent.collapseGroup(groupPosition);
+                }else{
+                    parent.expandGroup(groupPosition, true);
+                    parent.setSelectionFromTop(groupPosition, 1);
+                }
+                return true;
+            }
+        }
+        );
+
         ActionBar actionBar = getActionBar();
 
         mEmpty = (TextView) findViewById(R.id.empty);
@@ -89,7 +104,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
-            actionBar.setTitle(getString(R.string.title));
+            actionBar.setTitle(getString(R.string.lista_guias));
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
@@ -178,6 +193,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         return true;
     }
+
+
 
     @Override
     protected Dialog onCreateDialog(int id) {

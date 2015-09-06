@@ -2,6 +2,7 @@ package kronos.comkronoscodecomandroid.activity.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -19,9 +20,11 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
 
         Button btnList = (Button) findViewById(R.id.btn_go_to_list);
         Button btnAbout = (Button) findViewById(R.id.btn_go_about);
+        Button btnTutorial = (Button) findViewById(R.id.btn_go_tutorial);
 
         btnAbout.setOnClickListener(this);
         btnList.setOnClickListener(this);
+        btnTutorial.setOnClickListener(this);
     }
 
     @Override
@@ -36,6 +39,11 @@ public class WelcomeActivity extends Activity implements View.OnClickListener {
 
             case R.id.btn_go_about:
                 intent = new Intent(this, aboutActivity.class);
+                break;
+
+            case R.id.btn_go_tutorial:
+                intent = new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse(getResources().getString(R.string.youtube_video)));
                 break;
         }
 

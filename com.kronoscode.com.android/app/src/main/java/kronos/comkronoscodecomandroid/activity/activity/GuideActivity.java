@@ -2,9 +2,9 @@ package kronos.comkronoscodecomandroid.activity.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -31,6 +31,7 @@ public class GuideActivity extends Activity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setTitle(getString(R.string.title));
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         }
 
         Bundle intent = getIntent().getExtras();
