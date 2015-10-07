@@ -126,7 +126,7 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
 
         holder.group.setText(group);
         String numberDisplay;
-        if (groupPosition > 10){
+        if (groupPosition >= 9){
             numberDisplay = String.valueOf(groupPosition+1);
         } else{
             numberDisplay = "0" + String.valueOf(groupPosition+1);
