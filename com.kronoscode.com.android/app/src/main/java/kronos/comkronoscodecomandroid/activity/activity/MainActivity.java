@@ -332,6 +332,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     private class DownloadFileAsync extends AsyncTask<String, String, String> {
 
         private String mFileDir;
+        private boolean failed = false;
 
         @Override
         protected void onPreExecute() {
@@ -341,7 +342,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         @Override
         protected String doInBackground(String... link) {
-            int count;
+            int count = 0;
             try {
                 URL url = new URL(link[0]);
                 URLConnection connection = url.openConnection();
@@ -365,24 +366,39 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 byte data[] = new byte[1024];
 
                 long total = 0;
+                int retries = 0;
+                int maxRetries = 50000;
 
-                while ((count = input.read(data)) != -1) {
+                //while ((count = input.read(data)) != -1) {
+                while (true) {
+                    if( input.available() > 0 ) {
+                        count = input.read(data);
+                        retries = 0;
+                    } else {
+                        retries += 1;
+                        if (retries >= maxRetries )
+                            throw  new Exception("There is no internet");
+                        else
+                            continue;
+                    }
+
+                    if (count == -1){
+                        break;
+                    }
+                    if (isCancelled()) break;
+
                     total += count;
                     publishProgress("" + (int) ((total * 100) / lengthOfFile));
+
+
                     output.write(data, 0, count);
                 }
-
                 output.flush();
                 output.close();
                 input.close();
 
             } catch (Exception e) {
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        Utils.toastMessage(getBaseContext(), "Something wrong happened");
-                    }
-                };
+                failed = true;
             }
 
             return null;
@@ -396,7 +412,14 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         @Override
         protected void onPostExecute(String unused) {
             dismissDialog(DIALOG_DOWNLOAD_PROGRESS);
-            new unzipFile().execute(mFileDir);
+            if (!failed) {
+                new unzipFile().execute(mFileDir);
+            } else {
+                mProgressDialog.setProgress(0);
+                mProgressDialog.dismiss();
+                Utils.cleanDir(mFileDir);
+                Utils.toastMessage(getBaseContext(), "Error al descargar el contenido");
+            }
         }
     }
 
