@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -88,7 +89,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                     parent.collapseGroup(groupPosition);
                 }else{
                     parent.expandGroup(groupPosition, true);
-                    parent.setSelectionFromTop(groupPosition, 1);
+                    if (groupPosition == parent.getLastVisiblePosition())
+                        parent.setSelectionFromTop(groupPosition, 1);
                 }
                 return true;
             }
@@ -367,25 +369,30 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
                 long total = 0;
                 int retries = 0;
-                int maxRetries = 50000;
+                int maxRetries = 100;
 
                 //while ((count = input.read(data)) != -1) {
-                while (true) {
+                while (count != -1) {
                     if( input.available() > 0 ) {
-                        count = input.read(data);
                         retries = 0;
+                        count = input.read(data);
                     } else {
-                        retries += 1;
-                        if (retries >= maxRetries )
-                            throw  new Exception("There is no internet");
-                        else
-                            continue;
+                        if (total == lengthOfFile) {
+                            break;
+                        } else {
+                            retries += 1;
+                            synchronized (this) {
+                                wait(100);
+                            }
+                            if (retries >= maxRetries) {
+                                throw new Exception("There is no internet");
+                            } else {
+                                continue;
+                            }
+                        }
                     }
 
-                    if (count == -1){
-                        break;
-                    }
-                    if (isCancelled()) break;
+                    //if (isCancelled()) break;
 
                     total += count;
                     publishProgress("" + (int) ((total * 100) / lengthOfFile));
@@ -398,6 +405,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 input.close();
 
             } catch (Exception e) {
+                Log.d("CACAODEBUG", e.getMessage());
                 failed = true;
             }
 
