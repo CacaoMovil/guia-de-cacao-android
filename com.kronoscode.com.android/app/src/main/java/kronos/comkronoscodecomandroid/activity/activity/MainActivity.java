@@ -89,7 +89,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                     parent.collapseGroup(groupPosition);
                 }else{
                     parent.expandGroup(groupPosition, true);
-                    if (groupPosition == parent.getLastVisiblePosition())
+                    if (groupPosition == parent.getLastVisiblePosition() || groupPosition == parent.getCount() - 1)
                         parent.setSelectionFromTop(groupPosition, 1);
                 }
                 return true;
@@ -369,7 +369,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
                 long total = 0;
                 int retries = 0;
-                int maxRetries = 100;
+                int maxRetries = 1000;
 
                 //while ((count = input.read(data)) != -1) {
                 while (count != -1) {
