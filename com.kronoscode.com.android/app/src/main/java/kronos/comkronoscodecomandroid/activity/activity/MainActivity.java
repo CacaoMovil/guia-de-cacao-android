@@ -7,6 +7,7 @@ import android.app.LoaderManager;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.ActivityInfo;
@@ -42,6 +43,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.acl.Group;
@@ -49,6 +51,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import kronos.comkronoscodecomandroid.R;
 import kronos.comkronoscodecomandroid.activity.Api.ApiClient;
@@ -89,8 +93,9 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                     parent.collapseGroup(groupPosition);
                 }else{
                     parent.expandGroup(groupPosition, true);
-                    if (groupPosition == parent.getLastVisiblePosition() || groupPosition == parent.getCount() - 1)
-                        parent.setSelectionFromTop(groupPosition, 1);
+                    parent.getVisibility();
+                    if (groupPosition == parent.getLastVisiblePosition() - 1)
+                        parent.setSelection(groupPosition);
                 }
                 return true;
             }
@@ -328,9 +333,24 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
     }
 
+    private class Timeout extends TimerTask {
+        private DownloadFileAsync _task;
+
+        public Timeout(DownloadFileAsync task) {
+            _task = task;
+        }
+
+        @Override
+        public void run() {
+            _task.cancel(true);
+           _task.onCancelled("fail");
+        }
+    };
+
     /**
      * This class will download the file
      */
+
     private class DownloadFileAsync extends AsyncTask<String, String, String> {
 
         private String mFileDir;
@@ -343,11 +363,33 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         }
 
         @Override
+        protected void onCancelled(String foo){
+            super.onCancelled(foo);
+            mProgressDialog.setProgress(0);
+            mProgressDialog.dismiss();
+            failed = true;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mProgressDialog.setProgress(0);
+            mProgressDialog.dismiss();
+            failed = true;
+        }
+
+        @Override
         protected String doInBackground(String... link) {
             int count = 0;
+            InputStream input = null;
+            OutputStream output = null;
+            HttpURLConnection connection = null;
             try {
                 URL url = new URL(link[0]);
-                URLConnection connection = url.openConnection();
+                connection = (HttpURLConnection) url.openConnection();
+                //connection.setDoOutput(true);
+                connection.setConnectTimeout(1000);
+                connection.setReadTimeout(1000);
 
                 connection.connect();
                 int lengthOfFile = connection.getContentLength();
@@ -362,52 +404,51 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 mFileDir = Utils.ZIP_DIR + separated[1];
                 mFileName = separated[1];
 
-                InputStream input = new BufferedInputStream(url.openStream());
-                OutputStream output = new FileOutputStream(Utils.ZIP_DIR + separated[1]);
+                input = new BufferedInputStream(url.openStream());
+                output = new FileOutputStream(Utils.ZIP_DIR + separated[1]);
 
                 byte data[] = new byte[1024];
 
                 long total = 0;
-                int retries = 0;
-                int maxRetries = 1000;
 
-                //while ((count = input.read(data)) != -1) {
-                while (count != -1) {
-                    if( input.available() > 0 ) {
-                        retries = 0;
-                        count = input.read(data);
-                    } else {
-                        if (total == lengthOfFile) {
-                            break;
-                        } else {
-                            retries += 1;
-                            synchronized (this) {
-                                wait(100);
-                            }
-                            if (retries >= maxRetries) {
-                                throw new Exception("There is no internet");
-                            } else {
-                                continue;
-                            }
-                        }
+                Timer _timer = new Timer();
+                while ((count = input.read(data)) != -1) {
+                    // allow canceling with back button
+                    if (isCancelled()) {
+                        input.close();
+                        failed = true;
+                        return null;
                     }
-
-                    //if (isCancelled()) break;
-
                     total += count;
-                    publishProgress("" + (int) ((total * 100) / lengthOfFile));
-
+                    if (lengthOfFile> 0)
+                        publishProgress("" + (int) ((total * 100) / lengthOfFile));
 
                     output.write(data, 0, count);
+                    _timer.cancel();
+                    _timer = new Timer();
+                    _timer.schedule(new Timeout(this), 1000 * 10);
                 }
+                _timer.cancel();
                 output.flush();
                 output.close();
                 input.close();
-
             } catch (Exception e) {
                 Log.d("CACAODEBUG", e.getMessage());
                 failed = true;
+            } finally {
+            try {
+                if (output != null)
+                    output.close();
+                if (input != null)
+                    input.close();
+            } catch (IOException ignored) {
+                failed = true;
             }
+
+            if (connection != null)
+                connection.disconnect();
+            }
+
 
             return null;
 
@@ -520,7 +561,16 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      * @param path
      */
     public void downloadFile(String path) {
-        new DownloadFileAsync().execute(path);
+
+        final DownloadFileAsync task  = new DownloadFileAsync();
+        task.execute(path);
+
+        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                task.cancel(true);
+            }
+        });
     }
 
     /**
