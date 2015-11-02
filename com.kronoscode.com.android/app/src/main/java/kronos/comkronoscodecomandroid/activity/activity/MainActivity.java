@@ -81,7 +81,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+            requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
@@ -92,10 +92,14 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 if (parent.isGroupExpanded(groupPosition)) {
                     parent.collapseGroup(groupPosition);
                 }else{
+                    //Chicle para obtener la ultima visible
+                    int lastVis = parent.getLastVisiblePosition();
+                    long packedPosition = parent.getExpandableListPosition(lastVis);
+                    int realLastVis = ExpandableListView.getPackedPositionGroup(packedPosition);
                     parent.expandGroup(groupPosition, true);
-                    parent.getVisibility();
-                    if (groupPosition == parent.getLastVisiblePosition() - 1)
+                    if (groupPosition == realLastVis)
                         parent.setSelection(groupPosition);
+                        //parent.setSelectionFromTop(groupPosition, 0);
                 }
                 return true;
             }
