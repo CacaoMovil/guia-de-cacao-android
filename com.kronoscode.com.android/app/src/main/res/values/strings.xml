@@ -19,6 +19,6 @@
     <string name="open">Abrir</string>
     <string name="internet_not_available">No hay conexión a internet</string>
     <string name="no_results">No hay resultados</string>
-    <string name="youtube_video">https://www.youtube.com/watch?v=m05oSw5g1pk</string>
+    <string name="youtube_video">http://cacaomovil.com/videotutorial/</string>
     <string name="tutorial">Tutorial</string>
 </resources>
