@@ -45,8 +45,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -77,6 +75,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     private static final int REQUEST_ID = 1;
     private TextView mEmpty;
     private int mCurrentGroup = -1;
+    private SearchView mSearchView;
+    private String mSearchQuery = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +120,13 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         }
 
         if (intent != null) {
-            mValue = intent.getString("value");
+            mValue = intent.getString("value", "");
+            final String query =  intent.getString("query", "");
             if (mValue.equals("online")) {
                 // Try to update our local database
+                getRemoteData();
+            } else if (query != "") {
+                mSearchQuery = query;
                 getRemoteData();
             } else {
                 mFileName = intent.getString("filename");
@@ -131,15 +135,17 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
 
-        SearchView searchview = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
-        searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (mAdapter != null) {
@@ -156,6 +162,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 return true;
             }
         });
+
+
 
         return true;
     }
@@ -592,6 +600,11 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             listView.expandGroup(mCurrentGroup);
             listView.setSelectionFromTop(mCurrentGroup, 1);
             mCurrentGroup = -1;
+        }
+
+        if (mSearchQuery != ""){
+            mSearchView.setQuery(mSearchQuery, true);
+            mSearchQuery = "";
         }
     }
 
