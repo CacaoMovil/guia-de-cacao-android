@@ -7,15 +7,19 @@ public final class GuideTable {
  
     public static final String _ID = "_id"; 
  
-    public static final String NAME = "name"; 
-  
-    public static final String[] ALL_COLUMNS = new String[] { _ID, NAME };
+    public static final String NAME = "name";
+
+    public static final String TAGS = "tags";
+
+    public static final String[] ALL_COLUMNS = new String[] { _ID, NAME, TAGS };
  
-    public static final String SQL_CREATE = "CREATE TABLE guide ( _id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT )";
+    public static final String SQL_CREATE = "CREATE TABLE guide ( _id INTEGER PRIMARY KEY AUTOINCREMENT , name TEXT, tags TEXT )";
  
-    public static final String SQL_INSERT = "INSERT INTO guide ( name ) VALUES ( ? )";
+    public static final String SQL_INSERT = "INSERT INTO guide ( name, tags ) VALUES ( ?, ? )";
  
     public static final String SQL_DROP = "DROP TABLE IF EXISTS guide";
  
     public static final String WHERE_ID_EQUALS = _ID + "=?";
+
+    //public static final String WHERE_TAGS_IN = _ID + "=?";
 }

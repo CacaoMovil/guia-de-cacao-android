@@ -16,6 +16,9 @@ public class Guide implements Parcelable {
     @SerializedName("name")
     private String mName;
 
+    @SerializedName("tags")
+    private String mTags;
+
     private transient ContentValues mValues = new ContentValues();
  
     public Guide() {}
@@ -27,7 +30,8 @@ public class Guide implements Parcelable {
     public Guide(final Cursor cursor, boolean prependTableName) {
         String prefix = prependTableName ? GuideTable.TABLE_NAME + "_" : "";
         setRowId(cursor.getLong(cursor.getColumnIndex(prefix + GuideTable._ID)));
-        setName(cursor.getString(cursor.getColumnIndex(prefix + GuideTable.NAME))); 
+        setName(cursor.getString(cursor.getColumnIndex(prefix + GuideTable.NAME)));
+        setTags(cursor.getString(cursor.getColumnIndex(prefix + GuideTable.TAGS)));
     }
  
     public Guide(Parcel parcel) {
@@ -74,6 +78,15 @@ public class Guide implements Parcelable {
  
     public String getName() {
         return mName;
+    }
+
+    public final void setTags(String tags){
+        mTags = tags;
+        mValues.put(GuideTable.TAGS, tags);
+    }
+
+    public String getTags(){
+        return mTags;
     }
   
     public ContentValues getContentValues() {

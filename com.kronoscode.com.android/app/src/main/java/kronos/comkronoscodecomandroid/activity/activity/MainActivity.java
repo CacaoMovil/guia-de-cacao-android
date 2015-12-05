@@ -273,6 +273,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                     if (guide.getmVersions().size() > 0) {
                         ContentValues values = new ContentValues();
                         values.put(GuideTable.NAME, guide.getName());
+                        values.put(GuideTable.TAGS, guide.getTags());
                         //values.put(GuideTable.ID, counter);
 
                         getContentResolver().insert(CacaoProvider.GUIDE_CONTENT_URI, values);
@@ -285,6 +286,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                             versionValues.put(GuideVersionTable.FILE, version.getFile());
                             versionValues.put(GuideVersionTable.DATE, version.getDate());
                             versionValues.put(GuideVersionTable.NUM_VERSION, version.getNumVersion());
+                            versionValues.put(GuideVersionTable.TAGS, version.getTags());
 
                             getContentResolver().insert(CacaoProvider.GUIDEVERSION_CONTENT_URI, versionValues);
                             versions.add(version);

@@ -10,7 +10,7 @@ import android.util.Log;
  
 public class CacaoDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "cacao.db";
-    private static final int DATABASE_VERSION = 6; 
+    private static final int DATABASE_VERSION = 8;
     public static final String TAG = "CacaoDatabase";
  
     public CacaoDatabase(final Context context) {

@@ -12,7 +12,11 @@
         {
             "type":"String",
             "name":"name"
-        }
+        },
+        {
+            "type":"String",
+            "name":"tags"
+        },
       ],
       "parcelable": true
     },
@@ -38,6 +42,10 @@
             {
                 "type":"String",
                 "name":"path"
+            },
+            {
+              "type":"String",
+              "name":"tags"
             }
         ],
         "parcelable": true

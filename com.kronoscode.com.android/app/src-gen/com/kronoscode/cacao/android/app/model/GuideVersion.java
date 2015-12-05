@@ -22,6 +22,8 @@ public class GuideVersion implements Parcelable {
     private String mDate;
     @SerializedName("num_version")
     private String mNumVersion;
+    @SerializedName("tags")
+    private String mTags;
 
     private String mPath; 
   
@@ -40,7 +42,8 @@ public class GuideVersion implements Parcelable {
         setFile(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.FILE))); 
         setDate(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.DATE))); 
         setNumVersion(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.NUM_VERSION))); 
-        setPath(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.PATH))); 
+        setPath(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.PATH)));
+        setTags(cursor.getString(cursor.getColumnIndex(prefix + GuideVersionTable.TAGS)));
     }
  
     public GuideVersion(Parcel parcel) {
@@ -54,7 +57,9 @@ public class GuideVersion implements Parcelable {
  
         setNumVersion(parcel.readString()); 
  
-        setPath(parcel.readString()); 
+        setPath(parcel.readString());
+
+        setTags(parcel.readString());
     }
     
     @Override
@@ -74,7 +79,9 @@ public class GuideVersion implements Parcelable {
  
         parcel.writeString(getNumVersion()); 
  
-        parcel.writeString(getPath()); 
+        parcel.writeString(getPath());
+
+        parcel.writeString(getTags());
     }
  
     public static final Creator<GuideVersion> CREATOR = new Creator<GuideVersion>() {
@@ -116,7 +123,12 @@ public class GuideVersion implements Parcelable {
         mPath = path;
         mValues.put(GuideVersionTable.PATH, path);
     }
-  
+
+    public final void setTags(String tags) {
+        mTags= tags;
+        mValues.put(GuideVersionTable.TAGS, tags);
+    }
+
     public long getRowId() {
         return mRowId;
     }
@@ -124,7 +136,11 @@ public class GuideVersion implements Parcelable {
     public String getName() {
         return mName;
     }
- 
+
+    public String getTags() {
+        return mTags;
+    }
+
     public String getFile() {
         return mFile;
     }

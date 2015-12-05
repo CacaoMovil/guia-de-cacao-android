@@ -1,6 +1,7 @@
 package kronos.comkronoscodecomandroid.activity.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,8 +190,15 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
                                 .hasNext();) {
                             GuideVersion item = iterator.next();
 
-                             String violationName = item.getName();
+                            String violationName = item.getName();
                             if (violationName.toUpperCase().contains(constraint.toString().toUpperCase())
+                                    && !newValues.contains(item)) {
+
+                                newValues.add(item);
+                            }
+
+                            String tags = item.getTags();
+                            if (tags.toUpperCase().contains(constraint.toString().toUpperCase())
                                     && !newValues.contains(item)) {
 
                                 newValues.add(item);
