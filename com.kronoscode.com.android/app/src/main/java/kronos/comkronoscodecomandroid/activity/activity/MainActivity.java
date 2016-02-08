@@ -224,11 +224,16 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 mProgressDialog.setMessage(getString(R.string.downloading_text));
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 mProgressDialog.show();
-                mProgressDialog.setCancelable(false);
                 return mProgressDialog;
             default:
                 return null;
         }
+    }
+
+    @Override
+    protected void onPrepareDialog(int id, Dialog dialog) {
+        super.onPrepareDialog(id, dialog);
+        removeDialog(DIALOG_DOWNLOAD_PROGRESS);
     }
 
     /**
@@ -369,7 +374,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             super.onCancelled();
             mProgressDialog.setProgress(0);
             mProgressDialog.dismiss();
-            failed = false;
         }
 
         @Override
@@ -406,6 +410,12 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 long total = 0;
 
                 while ((count = input.read(data)) != -1) {
+
+                    if(isCancelled()) {
+                        publishProgress();
+                        break;
+                    }
+
                     total += count;
                     if (lengthOfFile > 0)
                         publishProgress("" + (int) ((total * 100) / lengthOfFile));
@@ -654,7 +664,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         mProgressDialog.cancel();
-                        mProgressDialog.dismiss();
                         task.cancel(true);
                     }
                 })
