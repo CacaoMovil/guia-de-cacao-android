@@ -104,7 +104,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                     parent.expandGroup(groupPosition, true);
                     if (groupPosition == realLastVis)
                         parent.setSelection(groupPosition);
-                    //parent.setSelectionFromTop(groupPosition, 0);
                 }
                 return true;
             }
@@ -370,7 +369,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             super.onCancelled();
             mProgressDialog.setProgress(0);
             mProgressDialog.dismiss();
-            failed = true;
+            failed = false;
         }
 
         @Override
@@ -386,7 +385,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setUseCaches(false);
                 connection.setConnectTimeout(5000); //set timeout to 5 seconds
-                //connection.setDoOutput(true);
                 connection.setDoInput(true);
 
                 int lengthOfFile = connection.getContentLength();
@@ -408,11 +406,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 long total = 0;
 
                 while ((count = input.read(data)) != -1) {
-                    if (isCancelled()) {
-                        input.close();
-                        failed = true;
-                        return null;
-                    }
                     total += count;
                     if (lengthOfFile > 0)
                         publishProgress("" + (int) ((total * 100) / lengthOfFile));
@@ -427,7 +420,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 if (connection != null) {
                     connection.disconnect();
                 }
-                failed = true;
             }
             return null;
         }
