@@ -1,6 +1,7 @@
 package kronos.comkronoscodecomandroid.activity.activity;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ExpandableListActivity;
 import android.app.LoaderManager;
@@ -49,11 +50,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import kronos.comkronoscodecomandroid.R;
-import kronos.comkronoscodecomandroid.activity.Api.ApiClient;
+import kronos.comkronoscodecomandroid.activity.api.ApiClient;
 import kronos.comkronoscodecomandroid.activity.adapter.GuideAdapter;
 import kronos.comkronoscodecomandroid.activity.object.Content;
 import kronos.comkronoscodecomandroid.activity.utils.Decompress;
@@ -63,35 +64,39 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends ExpandableListActivity implements LoaderManager.LoaderCallbacks<Cursor>,
-        ExpandableListView.OnChildClickListener{
+public class MainActivity extends ExpandableListActivity implements LoaderManager.LoaderCallbacks<Cursor>, ExpandableListView.OnChildClickListener {
 
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
+    private static final int REQUEST_ID = 1;
+    private static final int LOADER_ID = 0;
+
+    @Bind(R.id.empty)
+    TextView mEmpty;
+
     private ProgressDialog mProgressDialog;
     private String mFileName;
     private GuideAdapter mAdapter;
-    private static final int LOADER_ID = 0;
     private String mValue;
-    private static final int REQUEST_ID = 1;
-    private TextView mEmpty;
     private int mCurrentGroup = -1;
     private SearchView mSearchView;
     private String mSearchQuery = "";
+    private DownloadFileAsync task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         final ExpandableListView listView = this.getExpandableListView();
-        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener(){
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id){
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 if (parent.isGroupExpanded(groupPosition)) {
                     parent.collapseGroup(groupPosition);
-                }else{
+                } else {
                     //Chicle para obtener la ultima visible
                     int lastVis = parent.getLastVisiblePosition();
                     long packedPosition = parent.getExpandableListPosition(lastVis);
@@ -99,19 +104,15 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                     parent.expandGroup(groupPosition, true);
                     if (groupPosition == realLastVis)
                         parent.setSelection(groupPosition);
-                        //parent.setSelectionFromTop(groupPosition, 0);
+                    //parent.setSelectionFromTop(groupPosition, 0);
                 }
                 return true;
             }
-        }
-        );
+        });
 
         ActionBar actionBar = getActionBar();
 
-        mEmpty = (TextView) findViewById(R.id.empty);
-
         Bundle intent = getIntent().getExtras();
-
 
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
@@ -121,11 +122,11 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         if (intent != null) {
             mValue = intent.getString("value", "");
-            final String query =  intent.getString("query", "");
+            final String query = intent.getString("query", "");
             if (mValue.equals("online")) {
                 // Try to update our local database
                 getRemoteData();
-            } else if (query != "") {
+            } else if (!query.equals("")) {
                 mSearchQuery = query;
                 getRemoteData();
             } else {
@@ -144,7 +145,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
 
-
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -162,9 +162,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 return true;
             }
         });
-
-
-
         return true;
     }
 
@@ -186,7 +183,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         } else if (id == android.R.id.home) {
             finish();
         } else if (id == R.id.action_import) {
-            Intent  intent = new Intent(this, FilesProviderActivity.class);
+            Intent intent = new Intent(this, FilesProviderActivity.class);
             startActivityForResult(intent, REQUEST_ID);
         }
 
@@ -214,16 +211,21 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     }
 
 
-
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DIALOG_DOWNLOAD_PROGRESS:
-                mProgressDialog = new ProgressDialog(this);
-                mProgressDialog.setMessage("Downloading file..");
+                mProgressDialog = new ProgressDialog(MainActivity.this) {
+                    @Override
+                    public void onBackPressed() {
+                        cancelDownload();
+                    }
+                };
+                mProgressDialog.setProgress(0);
+                mProgressDialog.setMessage(getString(R.string.downloading_text));
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                mProgressDialog.setCancelable(false);
                 mProgressDialog.show();
+                mProgressDialog.setCancelable(false);
                 return mProgressDialog;
             default:
                 return null;
@@ -338,7 +340,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             displayView(hashMap);
 
         } else {
-            Utils.toastMessage(this, "No information saved");
+            Utils.toastMessage(this, getString(R.string.not_information_saved));
         }
     }
 
@@ -346,20 +348,6 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-
-    private class Timeout extends TimerTask {
-        private DownloadFileAsync _task;
-
-        public Timeout(DownloadFileAsync task) {
-            _task = task;
-        }
-
-        @Override
-        public void run() {
-            _task.cancel(true);
-           _task.onCancelled("fail");
-        }
-    };
 
     /**
      * This class will download the file
@@ -369,19 +357,12 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         private String mFileDir;
         private boolean failed = false;
+        private String finalLink;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             showDialog(DIALOG_DOWNLOAD_PROGRESS);
-        }
-
-        @Override
-        protected void onCancelled(String foo){
-            super.onCancelled(foo);
-            mProgressDialog.setProgress(0);
-            mProgressDialog.dismiss();
-            failed = true;
         }
 
         @Override
@@ -394,18 +375,20 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         @Override
         protected String doInBackground(String... link) {
-            int count = 0;
-            InputStream input = null;
-            OutputStream output = null;
+            int count;
+            InputStream input;
+            OutputStream output;
             HttpURLConnection connection = null;
             try {
+                finalLink = link[0];
                 URL url = new URL(link[0]);
+                System.setProperty("http.keepAlive", "false");
                 connection = (HttpURLConnection) url.openConnection();
+                connection.setUseCaches(false);
+                connection.setConnectTimeout(5000); //set timeout to 5 seconds
                 //connection.setDoOutput(true);
-                connection.setConnectTimeout(1000);
-                connection.setReadTimeout(1000);
+                connection.setDoInput(true);
 
-                connection.connect();
                 int lengthOfFile = connection.getContentLength();
 
                 File folder = new File(Utils.ZIP_DIR);
@@ -422,50 +405,31 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 output = new FileOutputStream(Utils.ZIP_DIR + separated[1]);
 
                 byte data[] = new byte[1024];
-
                 long total = 0;
 
-                Timer _timer = new Timer();
                 while ((count = input.read(data)) != -1) {
-                    // allow canceling with back button
                     if (isCancelled()) {
                         input.close();
                         failed = true;
                         return null;
                     }
                     total += count;
-                    if (lengthOfFile> 0)
+                    if (lengthOfFile > 0)
                         publishProgress("" + (int) ((total * 100) / lengthOfFile));
 
                     output.write(data, 0, count);
-                    _timer.cancel();
-                    _timer = new Timer();
-                    _timer.schedule(new Timeout(this), 1000 * 10);
                 }
-                _timer.cancel();
-                output.flush();
-                output.close();
-                input.close();
+
             } catch (Exception e) {
                 Log.d("CACAODEBUG", e.getMessage());
                 failed = true;
             } finally {
-            try {
-                if (output != null)
-                    output.close();
-                if (input != null)
-                    input.close();
-            } catch (IOException ignored) {
+                if (connection != null) {
+                    connection.disconnect();
+                }
                 failed = true;
             }
-
-            if (connection != null)
-                connection.disconnect();
-            }
-
-
             return null;
-
         }
 
         protected void onProgressUpdate(String... progress) {
@@ -481,7 +445,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 mProgressDialog.setProgress(0);
                 mProgressDialog.dismiss();
                 Utils.cleanDir(mFileDir);
-                Utils.toastMessage(getBaseContext(), "Error al descargar el contenido");
+                reconnectConnection(finalLink);
             }
         }
     }
@@ -504,20 +468,18 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         protected String doInBackground(String... fileRoot) {
             String zipRoot = fileRoot[0];
             try {
-                String[] separated = mFileName.split(".zip");
-
                 Decompress d = new Decompress(zipRoot, Utils.UNZIP_DIR);
                 try {
                     d.unzip();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Utils.toastMessage(getBaseContext(), "Something wrong happened trying to unzip this file");
+                    Utils.toastMessage(getBaseContext(), getString(R.string.error_unziping));
                 }
             } catch (Exception e) {
                 new Runnable() {
                     @Override
                     public void run() {
-                        Utils.toastMessage(getBaseContext(), "Something wrong happened");
+                        Utils.toastMessage(getBaseContext(), getString(R.string.error));
                     }
                 };
             }
@@ -536,7 +498,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                     try {
                         parseLocalJson();
                     } catch (IOException e) {
-                        Utils.toastMessage(getBaseContext(), "No se encontro archivo manifest");
+                        Utils.toastMessage(getBaseContext(), getString(R.string.not_manifest_found));
                         e.printStackTrace();
                     }
 
@@ -552,10 +514,9 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      */
     public void goToFolder(String localPath) {
         try {
-
             Intent intent = new Intent(this, GuideActivity.class);
             String oldIndexPath = localPath + "/guia/index.html";
-            if (Utils.checkIfFolderExist(oldIndexPath)){
+            if (Utils.checkIfFolderExist(oldIndexPath)) {
                 intent.putExtra("FILE", localPath + "/guia/index.html");
             } else {
                 intent.putExtra("FILE", localPath + "/index.html");
@@ -564,7 +525,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
             this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
         } catch (Exception e) {
-            Utils.toastMessage(this, "You need to install a file Explorer");
+            Utils.toastMessage(this, getString(R.string.file_explorer_file));
             installFileManager();
         }
     }
@@ -575,16 +536,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
      * @param path
      */
     public void downloadFile(String path) {
-
-        final DownloadFileAsync task  = new DownloadFileAsync();
+        task = new DownloadFileAsync();
         task.execute(path);
-
-        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                task.cancel(true);
-            }
-        });
     }
 
     /**
@@ -595,14 +548,14 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
     public void displayView(Map<String, List<GuideVersion>> hashMap) {
         mAdapter = new GuideAdapter(this, hashMap, getExpandableListView(), mEmpty);
         setListAdapter(mAdapter);
-        if (mCurrentGroup != -1){
+        if (mCurrentGroup != -1) {
             ExpandableListView listView = this.getExpandableListView();
             listView.expandGroup(mCurrentGroup);
             listView.setSelectionFromTop(mCurrentGroup, 1);
             mCurrentGroup = -1;
         }
 
-        if (mSearchQuery != ""){
+        if (!mSearchQuery.equals("")) {
             mSearchView.setQuery(mSearchQuery, true);
             mSearchQuery = "";
         }
@@ -626,23 +579,15 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
 
     /**
-     * this function will get the guide zip from the sdcard
-     */
-    private boolean getInfoFromSdCard() {
-        //return Utils.checkIfFolderExist(Utils.ZIP_DIR + "guia.zip");
-        return true;
-    }
-
-    /**
      * @throws IOException
      */
     private void parseLocalJson() throws IOException {
 
         String fileName;
         String[] file = mFileName.split(".zip");
-        if (file[0].contains("/")){
+        if (file[0].contains("/")) {
             String[] paths = file[0].split("/");
-            fileName = paths[paths.length-1];
+            fileName = paths[paths.length - 1];
         } else {
             fileName = file[0];
         }
@@ -668,14 +613,14 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         for (Guide guide : content.getContents()) {
 
-            for (GuideVersion version: guide.getmVersions()) {
+            for (GuideVersion version : guide.getmVersions()) {
                 if (Integer.parseInt(content.getGuide_id()) == i) {
                     if (version.getNumVersion().equals(content.getGuide_version())) {
 
                         String[] separated = version.getFile().split("descargas/");
                         String[] separated2 = separated[1].split(".zip");
                         File from = new File(Utils.UNZIP_DIR + file[0]);
-                        File to = new File(Utils.UNZIP_DIR +  separated2[0]);
+                        File to = new File(Utils.UNZIP_DIR + separated2[0]);
                         from.renameTo(to);
                     }
                 }
@@ -686,7 +631,7 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
         if (content.getContents().size() > 0)
             postData(content.getContents());
         else
-            Utils.toastMessage(this, "No content");
+            Utils.toastMessage(this, getString(R.string.not_content));
     }
 
     @Override
@@ -702,9 +647,49 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
                 intent = new Intent(this, MainActivity.class);
                 intent.putExtra("value", "sdcard");
                 intent.putExtra("filename", result);
-
                 startActivity(intent);
             }
         }
+    }
+
+    /**
+     * Le'ts ask if we really want to cancel the current download.
+     */
+    private void cancelDownload() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.cancel_download_msg)
+                .setCancelable(false)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        mProgressDialog.cancel();
+                        mProgressDialog.dismiss();
+                        task.cancel(true);
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void reconnectConnection(final String url) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.error_download_retry)
+                .setCancelable(false)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        downloadFile(url);
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }

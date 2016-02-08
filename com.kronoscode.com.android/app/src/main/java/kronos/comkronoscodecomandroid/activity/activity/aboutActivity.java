@@ -35,7 +35,6 @@ public class aboutActivity extends Activity {
 
         mWebView.loadUrl("file:///android_asset/about.html");
 
-
         ActionBar actionBar = getActionBar();
 
         if (actionBar != null) {

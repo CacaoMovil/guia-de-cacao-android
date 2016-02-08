@@ -1,4 +1,4 @@
-package kronos.comkronoscodecomandroid.activity.Api;
+package kronos.comkronoscodecomandroid.activity.api;
 
 import com.kronoscode.cacao.android.app.model.Guide;
 

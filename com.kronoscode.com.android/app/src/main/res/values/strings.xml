@@ -21,4 +21,15 @@
     <string name="no_results">No hay resultados</string>
     <string name="youtube_video">http://cacaomovil.com/videotutorial/</string>
     <string name="tutorial">Tutorial</string>
+    <string name="downloading_text">Descargando guia..</string>
+    <string name="not_manifest_found">No se encontro archivo manifest</string>
+    <string name="error">Something wrong happened</string>
+    <string name="cancel_download_msg">¿ Esta seguro que desea cancelar la descarga ?</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="error_unziping">Something wrong happened trying to unzip this file</string>
+    <string name="file_explorer_file">You need to install a file Explorer</string>
+    <string name="not_content">No content</string>
+    <string name="error_download_retry">Hubo un error al descargar el archivo, ¿ desea intentarlo nuevamente ?</string>
+    <string name="not_information_saved">No information saved</string>
 </resources>
