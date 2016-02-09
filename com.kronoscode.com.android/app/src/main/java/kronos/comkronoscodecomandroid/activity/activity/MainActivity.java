@@ -440,7 +440,8 @@ public class MainActivity extends ExpandableListActivity implements LoaderManage
 
         @Override
         protected void onPostExecute(String unused) {
-            dismissDialog(DIALOG_DOWNLOAD_PROGRESS);
+            //dismissDialog(DIALOG_DOWNLOAD_PROGRESS);
+            mProgressDialog.hide();
             if (!failed) {
                 new unzipFile().execute(mFileDir);
             } else {
