@@ -6,15 +6,25 @@ android {
             java.srcDirs = ['src/main/java', 'src-gen']
         }
     }
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion "21.1.2"
     defaultConfig {
         applicationId "kronos.cacaomovil"
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 14
         versionName "1.9.5"
     }
+
+    // Important to exclude because of retrofit
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -25,9 +35,26 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:support-v4:23.1.1'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.jakewharton:butterknife:7.0.0'
+
+    compile 'com.vikingsen:pocketknife-core:3.1.0'
+    provided 'com.vikingsen:pocketknife-compiler:3.1.0'
+
+    // Retrofit 2.0
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+
+    provided 'javax.annotation:javax.annotation-api:1.2'
+    provided 'com.google.dagger:dagger-compiler:2.0.1'
+    compile 'com.google.dagger:dagger:2.0.1'
+
+    // Greenrobot EventBus
+    compile 'de.greenrobot:eventbus:3.0.0-beta1'
+    provided 'de.greenrobot:eventbus-annotation-processor:3.0.0-beta1'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
 }

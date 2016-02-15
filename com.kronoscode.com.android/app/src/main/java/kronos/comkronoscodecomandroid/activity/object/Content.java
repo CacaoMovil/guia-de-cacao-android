@@ -1,5 +1,6 @@
 package kronos.comkronoscodecomandroid.activity.object;
 
+import com.google.gson.annotations.SerializedName;
 import com.kronoscode.cacao.android.app.model.Guide;
 
 import java.util.List;
@@ -9,9 +10,13 @@ import java.util.List;
  */
 public class Content {
 
+    @SerializedName("manifest_version")
     private String manifest_version;
+    @SerializedName("guide_id")
     private String guide_id;
+    @SerializedName("guide_version")
     private String guide_version;
+    @SerializedName("generation_date")
     private String generation_date;
 
     private List<Guide> contents;

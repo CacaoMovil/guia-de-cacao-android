@@ -4,23 +4,42 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import kronos.comkronoscodecomandroid.R;
+import pocketknife.PocketKnife;
 
-public class aboutActivity extends Activity {
+public class aboutActivity extends BaseActivity {
 
-    WebView mWebView;
+    @Bind(R.id.webview)
+    WebView webView;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        mWebView = (WebView) findViewById(R.id.aboutUsWebView);
-        WebSettings webSettings = mWebView.getSettings();
+        ButterKnife.bind(this);
+        PocketKnife.bindExtras(this);
+
+        setSupportActionBar(toolbar);
+        setTitle(getString(R.string.title_activity_about));
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
+        WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
         webSettings.setDomStorageEnabled(true);
@@ -30,19 +49,11 @@ public class aboutActivity extends Activity {
             webSettings.setAllowFileAccessFromFileURLs(true);
         }
 
-        mWebView.setWebViewClient(new WebViewClient());
-        mWebView.setWebChromeClient(new WebChromeClient());
+        webView.setWebViewClient(new WebViewClient());
+        webView.setWebChromeClient(new WebChromeClient());
 
-        mWebView.loadUrl("file:///android_asset/about.html");
+        webView.loadUrl("file:///android_asset/about.html");
 
-        ActionBar actionBar = getActionBar();
-
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setTitle(getString(R.string.title));
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(getString(R.string.title_activity_about));
-        }
     }
 
     @Override

@@ -4,46 +4,42 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@drawable/background"
-    android:paddingBottom="0dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="kronos.comkronoscodecomandroid.activity.activity.WelcomeActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/app_toolbar"/> 
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:layout_height="@dimen/welcome_central_image_height"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="@dimen/welcome_central_image_top_margin"
-        android:src="@drawable/cacao" />
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/applicationName"
+        android:id="@+id/title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageView"
+        android:layout_below="@id/logo"
         android:layout_marginBottom="10dp"
         android:gravity="center"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="@string/long_app_name"
-        android:textColor="#ffffffff"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/welcome_title_text_size"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/longDescription"
+        android:id="@+id/welcome_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/applicationName"
+        android:layout_below="@id/title"
         android:layout_marginBottom="40dp"
         android:gravity="center"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="@string/app_description"
         android:textColor="#ffffffff"
         android:textStyle="bold" />
 
@@ -52,7 +48,7 @@
         android:id="@+id/buttonsGroup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/longDescription"
+        android:layout_below="@id/welcome_title"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -61,33 +57,29 @@
             android:layout_width="@dimen/welcome_screen_button_width"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:background="@android:color/holo_green_dark"
+            android:background="@drawable/btn"
             android:text="@string/lista_guias"
             android:textAllCaps="true"
-            android:textColor="#ffffff" />
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btn_go_about"
             android:layout_width="@dimen/welcome_screen_button_width"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:layout_below="@id/btn_go_to_list"
-            android:background="@android:color/holo_green_dark"
+            android:background="@drawable/btn"
             android:text="@string/title_activity_about"
             android:textAllCaps="true"
-            android:textColor="#ffffff" />
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btn_go_tutorial"
             android:layout_width="@dimen/welcome_screen_button_width"
             android:layout_height="wrap_content"
-            android:layout_below="@id/btn_go_about"
-            android:background="@android:color/holo_green_dark"
+            android:background="@drawable/btn"
             android:text="@string/tutorial"
             android:textAllCaps="true"
-            android:textColor="#ffffff" />
-
-
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 

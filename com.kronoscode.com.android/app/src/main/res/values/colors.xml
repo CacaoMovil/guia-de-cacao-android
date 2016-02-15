@@ -6,4 +6,10 @@
     <color name="selected_list_item_background">#302c29</color>
     <color name="list_item_data_color">#8eab41</color>
     <color name="selected_list_item_text_color">#fefefe</color>
+
+    <color name="colorPrimary">#8eab41</color>
+    <color name="colorPrimaryDark">#b3c87a</color>
+    <color name="colorAccent">#9fd5c9</color>
+
+
 </resources>

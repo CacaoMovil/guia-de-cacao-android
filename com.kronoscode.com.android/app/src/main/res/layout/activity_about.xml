@@ -4,13 +4,17 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="kronos.comkronoscodecomandroid.activity.activity.aboutActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/app_toolbar"/> 
+
     <WebView
-        android:id="@+id/aboutUsWebView"
+        android:id="@+id/webview"
         android:scrollbars="vertical"
+        android:layout_below="@+id/toolbar"
         android:fadeScrollbars="true"
         android:fadingEdge="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-         />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

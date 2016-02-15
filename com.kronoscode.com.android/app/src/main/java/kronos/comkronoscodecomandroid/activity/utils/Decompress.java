@@ -16,11 +16,14 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.inject.Singleton;
+
 /**
  * This class will descompress the zip information
  * @author jhon chavarria
  *
  */
+
 public class Decompress {
     private String _zipFile;
     private String _location;

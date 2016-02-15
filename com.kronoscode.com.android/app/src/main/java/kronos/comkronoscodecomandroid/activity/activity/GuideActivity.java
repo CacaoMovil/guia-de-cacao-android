@@ -1,12 +1,10 @@
 package kronos.comkronoscodecomandroid.activity.activity;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,55 +12,61 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.SearchView;
 
 import java.io.File;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import kronos.comkronoscodecomandroid.R;
-import kronos.comkronoscodecomandroid.activity.adapter.GuideAdapter;
+import kronos.comkronoscodecomandroid.activity.constants.Constants;
 import kronos.comkronoscodecomandroid.activity.utils.Utils;
+import pocketknife.BindExtra;
+import pocketknife.PocketKnife;
 
-public class GuideActivity extends Activity {
+public class GuideActivity extends BaseActivity {
 
-    private WebView mBrowser;
-    private GuideAdapter mAdapter;
+    @Bind(R.id.webview)
+    WebView browser;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
+    @BindExtra(Constants.FILE)
+    String filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
+        ButterKnife.bind(this);
+        PocketKnife.bindExtras(this);
 
-        ActionBar actionBar = getActionBar();
+        setSupportActionBar(toolbar);
+        setTitle(getString(R.string.title));
 
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setTitle(getString(R.string.title));
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        Bundle intent = getIntent().getExtras();
+        if (getIntent().getExtras() != null) {
 
-        if (intent!=null) {
-            String path = intent.getString("FILE");
-
-            File file = new File(path);
+            File file = new File(filePath);
             if (file.exists()) {
-                mBrowser = (WebView) findViewById(R.id.webview);
-                WebSettings webSettings = mBrowser.getSettings();
+                WebSettings webSettings = browser.getSettings();
                 webSettings.setJavaScriptEnabled(true);
                 webSettings.setBuiltInZoomControls(true);
                 webSettings.setDomStorageEnabled(true);
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     webSettings.setAllowUniversalAccessFromFileURLs(true);
                     webSettings.setAllowFileAccessFromFileURLs(true);
                 }
 
-                mBrowser.setWebViewClient(new WebViewClient());
-                mBrowser.setWebChromeClient(new WebChromeClient());
+                browser.setWebViewClient(new WebViewClient());
+                browser.setWebChromeClient(new WebChromeClient());
 
-                mBrowser.loadUrl("file://" + path);
+                browser.loadUrl("file://" + filePath);
             } else {
                 Utils.toastMessage(this, "Index file does not exist in this folder");
             }
@@ -104,7 +108,6 @@ public class GuideActivity extends Activity {
                 returnIntent.putExtra("query", query);
                 setResult(RESULT_OK, returnIntent);
                 startActivity(returnIntent);
-
                 return true;
             }
         });

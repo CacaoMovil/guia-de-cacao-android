@@ -5,7 +5,7 @@
     <dimen name="welcome_screen_button_width">200dp</dimen>
     <dimen name="welcome_central_image_height">100dp</dimen>
     <dimen name="welcome_central_image_top_margin">40dp</dimen>
-    <dimen name="welcome_title_text_size">25dp</dimen>
+    <dimen name="welcome_title_text_size">25sp</dimen>
     <dimen name="list_image_height">100dp</dimen>
-    <dimen name="list_number_text_size">30dp</dimen>
+    <dimen name="list_number_text_size">30sp</dimen>
 </resources>

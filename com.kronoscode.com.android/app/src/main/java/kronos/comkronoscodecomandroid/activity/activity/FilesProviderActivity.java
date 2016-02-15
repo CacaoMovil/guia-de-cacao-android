@@ -20,11 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kronos.comkronoscodecomandroid.R;
+import kronos.comkronoscodecomandroid.activity.constants.Constants;
 
 /**
  * This class will handle the custom explorer to get the zip file
- * @author jhon chavarria
  *
+ * @author jhon chavarria
  */
 public class FilesProviderActivity extends ListActivity {
 
@@ -39,24 +40,17 @@ public class FilesProviderActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files_provider);
 
-        ActionBar actionBar = getActionBar();
-
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setTitle(getString(R.string.title_files_provider));
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         mPath = (TextView) findViewById(R.id.path);
         getDir(mDir);
     }
 
     /**
      * This function will display all the files inside a specific folder
+     *
      * @param dirPath
      */
     private void getDir(String dirPath) {
-        mPath.setText("Location: " + dirPath);
+        mPath.setText(getString(R.string.location) + dirPath);
 
         item = new ArrayList<>();
         path = new ArrayList<>();
@@ -74,8 +68,7 @@ public class FilesProviderActivity extends ListActivity {
 
         }
 
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
+        for (File file : files) {
             path.add(file.getPath());
             if (file.isDirectory())
                 item.add(file.getName() + "/");
@@ -105,41 +98,32 @@ public class FilesProviderActivity extends ListActivity {
                                         + "] folder can't be read!")
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
-
                                     @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int which) {
+                                    public void onClick(DialogInterface dialog, int which) {
+
                                     }
                                 }).show();
             }
         } else {
-
             new AlertDialog.Builder(this)
                     .setIcon(R.drawable.eye_icon)
-                    .setTitle("Seleccionar")
-                    .setMessage("Desea Seleccionar este archivo:  " + mFile.getName() + " ?")
-                    .setPositiveButton("Si",
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-
-                                    Intent returnIntent = new Intent();
-                                    returnIntent.putExtra("result", mFile.getAbsolutePath());
-                                    setResult(RESULT_OK, returnIntent);
-                                    finish();
-                                }
-                            })
-                    .setNegativeButton("No",
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
+                    .setTitle(R.string.select)
+                    .setMessage(getString(R.string.select_file) + mFile.getName() + " ?")
+                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent returnIntent = new Intent();
+                            returnIntent.putExtra(Constants.FILE_RESULT, mFile.getAbsolutePath());
+                            setResult(RESULT_OK, returnIntent);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
         }
     }
 }
