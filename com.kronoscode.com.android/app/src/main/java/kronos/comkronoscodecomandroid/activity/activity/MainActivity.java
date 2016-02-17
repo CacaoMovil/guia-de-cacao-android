@@ -44,7 +44,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,8 +60,11 @@ import kronos.comkronoscodecomandroid.activity.api.GuidesService;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
 import kronos.comkronoscodecomandroid.activity.event.ToastEvent;
 import kronos.comkronoscodecomandroid.activity.object.Content;
+import kronos.comkronoscodecomandroid.activity.utils.DatabaseUtil;
 import kronos.comkronoscodecomandroid.activity.utils.Decompress;
-import kronos.comkronoscodecomandroid.activity.utils.Utils;
+import kronos.comkronoscodecomandroid.activity.utils.FolderUtil;
+import kronos.comkronoscodecomandroid.activity.utils.GuideUtils;
+import kronos.comkronoscodecomandroid.activity.utils.NetworkUtil;
 import pocketknife.BindExtra;
 import pocketknife.NotRequired;
 import pocketknife.PocketKnife;
@@ -82,7 +84,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     private ProgressDialog progressDialog;
     private String filename;
     private GuideAdapter adapter;
-    private int currentGroup = -1;
+    //private int currentGroup = -1;
     private SearchView searchView;
     private DownloadFileAsync task;
 
@@ -101,10 +103,12 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     @BindExtra(Constants.SEARCH_VALUE)
     String searchValue;
 
-    @NotRequired @BindExtra(Constants.QUERY)
+    @NotRequired
+    @BindExtra(Constants.QUERY)
     String query;
 
-    @NotRequired @BindExtra(Constants.FILENAME)
+    @NotRequired
+    @BindExtra(Constants.FILENAME)
     String file;
 
     @Bind(R.id.toolbar)
@@ -115,6 +119,18 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Inject
     EventBus eventBus;
+
+    @Inject
+    FolderUtil folderUtil;
+
+    @Inject
+    DatabaseUtil databaseUtil;
+
+    @Inject
+    GuideUtils guideUtils;
+
+    @Inject
+    NetworkUtil networkUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +146,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        setTitle(getString(R.string.lista_guias));
+        setTitle(getString(R.string.guide_list));
 
         listViewAction();
 
@@ -176,18 +192,14 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
 
-            if (Utils.isNetworkAvailable(this)) {
+            if (networkUtil.isNetworkAvailable()) {
                 getRemoteData();
             } else {
-                Utils.toastMessage(this, getString(R.string.internet_not_available));
+                eventBus.post(new ToastEvent(getString(R.string.internet_not_available)));
             }
         } else if (id == android.R.id.home) {
             finish();
@@ -202,18 +214,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-        GuideVersion version = (GuideVersion) adapter.getChild(groupPosition, childPosition);
-        if (Utils.checkIfFolderExist(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()))) {
-            goToFolder(Utils.UNZIP_DIR + Utils.getNameFromPath(version.getFile()));
-        } else {
-            if (Utils.isNetworkAvailable(this)) {
-                currentGroup = groupPosition;
-                downloadFile(Utils.DOMAIN + version.getFile());
-            } else {
-                Utils.toastMessage(this, getString(R.string.internet_not_available));
-            }
-        }
-
+        // temporarily disabled
         return true;
     }
 
@@ -225,7 +226,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 progressDialog = new ProgressDialog(MainActivity.this) {
                     @Override
                     public void onBackPressed() {
-                        cancelDownload();
+                        cancelDownloadDialog();
                     }
                 };
                 progressDialog.setProgress(0);
@@ -248,8 +249,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
      * This function will request data from the server
      */
     public void getRemoteData() {
-        if (Utils.isNetworkAvailable(this)) {
-
+        if (networkUtil.isNetworkAvailable()) {
             showProgress(true);
 
             Call<List<Guide>> call = guidesService.getGuides();
@@ -264,6 +264,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                         postData(null);
                     }
                 }
+
                 @Override
                 public void onFailure(Throwable t) {
                     eventBus.post(new ToastEvent(t.getMessage()));
@@ -274,6 +275,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             restartLoader();
         }
     }
+
     /**
      * Data from backend, let's fill the listview!
      *
@@ -284,7 +286,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         // if data  was consumed
         if (guides != null) {
             // Cleaning tables
-            Utils.cleanLocalTables(this);
+            databaseUtil.cleanLocalTables();
 
             if (guides.size() > 0) {
                 for (Guide guide : guides) {
@@ -335,7 +337,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 List<GuideVersion> version;
 
                 if (!guide.getName().equals("")) {
-                    version = Utils.getVersionsFromGuide(getBaseContext(), guide.getName());
+                    version = guideUtils.getVersionsFromGuide(guide.getName());
                     if (version.size() > 0) {
                         guide.setmVersions(version);
                     }
@@ -348,7 +350,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             displayView(hashMap);
 
         } else {
-            Utils.toastMessage(this, getString(R.string.not_information_saved));
+            eventBus.post(new ToastEvent(getString(R.string.not_information_saved)));
         }
     }
 
@@ -362,8 +364,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
      */
 
     private class DownloadFileAsync extends AsyncTask<String, String, String> {
-
-        private String mFileDir;
+        private String fileDir;
         private boolean failed = false;
         private String finalLink;
 
@@ -397,25 +398,25 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
                 int lengthOfFile = connection.getContentLength();
 
-                File folder = new File(Utils.ZIP_DIR);
+                File folder = new File(Constants.ZIP_DIR);
 
                 if (!folder.isDirectory()) {
                     folder.mkdirs();
                 }
 
                 String[] separated = link[0].split("descargas/");
-                mFileDir = Utils.ZIP_DIR + separated[1];
+                fileDir = Constants.ZIP_DIR + separated[1];
                 filename = separated[1];
 
                 input = new BufferedInputStream(url.openStream());
-                output = new FileOutputStream(Utils.ZIP_DIR + separated[1]);
+                output = new FileOutputStream(Constants.ZIP_DIR + separated[1]);
 
                 byte data[] = new byte[1024];
                 long total = 0;
 
                 while ((count = input.read(data)) != -1) {
 
-                    if(isCancelled()) {
+                    if (isCancelled()) {
                         publishProgress();
                         break;
                     }
@@ -428,7 +429,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 }
 
             } catch (Exception e) {
-                Log.d("CACAODEBUG", e.getMessage());
+                Log.d("CACAO DEBUG", e.getMessage());
                 failed = true;
             } finally {
                 if (connection != null) {
@@ -444,15 +445,14 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         @Override
         protected void onPostExecute(String unused) {
-            //dismissDialog(DIALOG_DOWNLOAD_PROGRESS);
             progressDialog.hide();
             if (!failed) {
-                new unzipFile().execute(mFileDir);
+                new unzipFile().execute(fileDir);
             } else {
                 progressDialog.setProgress(0);
                 progressDialog.dismiss();
-                Utils.cleanDir(mFileDir);
-                reconnectConnection(finalLink);
+                folderUtil.cleanDir(fileDir);
+                downloadGuideDialog(finalLink, getString(R.string.error_download_retry), getString(R.string.yes));
             }
         }
     }
@@ -461,32 +461,32 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
      * This class will unzip the file downloaded before and will update our local database.
      */
     private class unzipFile extends AsyncTask<String, String, String> {
-        ProgressDialog mDialog;
+        ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mDialog = new ProgressDialog(MainActivity.this);
-            mDialog.setMessage(getString(R.string.unzip_msg));
-            mDialog.show();
+            dialog = new ProgressDialog(MainActivity.this);
+            dialog.setMessage(getString(R.string.unzip_msg));
+            dialog.show();
         }
 
         @Override
         protected String doInBackground(String... fileRoot) {
             String zipRoot = fileRoot[0];
             try {
-                Decompress d = new Decompress(zipRoot, Utils.UNZIP_DIR);
+                Decompress d = new Decompress(zipRoot, Constants.UNZIP_DIR);
                 try {
                     d.unzip();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Utils.toastMessage(getBaseContext(), getString(R.string.error_unziping));
+                    eventBus.post(new ToastEvent(getString(R.string.error_on_unzip)));
                 }
             } catch (Exception e) {
                 new Runnable() {
                     @Override
                     public void run() {
-                        Utils.toastMessage(getBaseContext(), getString(R.string.error));
+                        eventBus.post(new ToastEvent(getString(R.string.error)));
                     }
                 };
             }
@@ -495,17 +495,18 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         @Override
         protected void onPostExecute(String unused) {
-            if (mDialog != null) {
-                mDialog.dismiss();
+            if (dialog != null) {
+                dialog.dismiss();
 
-                if (searchValue.equals("online")) {
-                    Utils.cleanDir(Utils.ZIP_DIR + filename);
+                if (searchValue.equals(Constants.SOURCE_ONLINE)) {
+                    folderUtil.cleanDir(Constants.ZIP_DIR + filename);
+                    goToFolder(Constants.UNZIP_DIR + filename.split(".zip")[0]);
                     restartLoader();
                 } else {
                     try {
                         parseLocalJson();
                     } catch (IOException e) {
-                        Utils.toastMessage(getBaseContext(), getString(R.string.not_manifest_found));
+                        eventBus.post(new ToastEvent(getString(R.string.not_manifest_found)));
                         e.printStackTrace();
                     }
 
@@ -523,7 +524,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         try {
             Intent intent = new Intent(this, GuideActivity.class);
             String oldIndexPath = localPath + "/guia/index.html";
-            if (Utils.checkIfFolderExist(oldIndexPath)) {
+            if (folderUtil.checkIfFolderExist(oldIndexPath)) {
                 intent.putExtra(Constants.FILE, localPath + "/guia/index.html");
             } else {
                 intent.putExtra(Constants.FILE, localPath + "/index.html");
@@ -532,7 +533,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             this.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
         } catch (Exception e) {
-            Utils.toastMessage(this, getString(R.string.file_explorer_file));
+            eventBus.post(new ToastEvent(getString(R.string.file_explorer_file)));
             installFileManager();
         }
     }
@@ -555,11 +556,6 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     public void displayView(Map<String, List<GuideVersion>> hashMap) {
         adapter = new GuideAdapter(this, hashMap, guidesList, empty);
         guidesList.setAdapter(adapter);
-        if (currentGroup != -1) {
-            guidesList.expandGroup(currentGroup);
-            guidesList.setSelectionFromTop(currentGroup, 1);
-            currentGroup = -1;
-        }
 
         if (query != null) {
             if (!query.equals("")) {
@@ -574,7 +570,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
      */
     public void installFileManager() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("market://details?id=" + Utils.FILE_MANAGER_PLAYSTORE));
+        intent.setData(Uri.parse("market://details?id=" + Constants.FILE_MANAGER_PLAYSTORE));
         startActivity(intent);
     }
 
@@ -590,7 +586,6 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
      * @throws IOException
      */
     private void parseLocalJson() throws IOException {
-
         String fileName;
         String[] file = filename.split(".zip");
         if (file[0].contains("/")) {
@@ -600,7 +595,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             fileName = file[0];
         }
 
-        BufferedReader reader = new BufferedReader(new FileReader(Utils.UNZIP_DIR + fileName + "/manifest.json"));
+        BufferedReader reader = new BufferedReader(new FileReader(Constants.UNZIP_DIR + fileName + "/manifest.json"));
         String line, results = "";
         while ((line = reader.readLine()) != null) {
             results += line;
@@ -615,32 +610,39 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         }
 
         Gson gson = new Gson();
-        Content content;
-        content = gson.fromJson(obj.toString(), Content.class);
+        Content content = null;
+
+        if (obj != null) {
+            content = gson.fromJson(obj.toString(), Content.class);
+        }
 
         int i = 1;
 
-        for (Guide guide : content.getContents()) {
+        if (content != null) {
+            for (Guide guide : content.getContents()) {
+                for (GuideVersion version : guide.getmVersions()) {
+                    if (Integer.parseInt(content.getGuide_id()) == i) {
+                        if (version.getNumVersion().equals(content.getGuide_version())) {
 
-            for (GuideVersion version : guide.getmVersions()) {
-                if (Integer.parseInt(content.getGuide_id()) == i) {
-                    if (version.getNumVersion().equals(content.getGuide_version())) {
-
-                        String[] separated = version.getFile().split("descargas/");
-                        String[] separated2 = separated[1].split(".zip");
-                        File from = new File(Utils.UNZIP_DIR + file[0]);
-                        File to = new File(Utils.UNZIP_DIR + separated2[0]);
-                        from.renameTo(to);
+                            String[] separated = version.getFile().split("descargas/");
+                            String[] separated2 = separated[1].split(".zip");
+                            File from = new File(Constants.UNZIP_DIR + file[0]);
+                            File to = new File(Constants.UNZIP_DIR + separated2[0]);
+                            from.renameTo(to);
+                        }
                     }
                 }
+                i++;
             }
-            i++;
         }
 
-        if (content.getContents().size() > 0)
-            postData(content.getContents());
-        else
-            Utils.toastMessage(this, getString(R.string.not_content));
+        if (content != null) {
+            if (content.getContents().size() > 0)
+                postData(content.getContents());
+            else {
+                eventBus.post(new ToastEvent(getString(R.string.not_content)));
+            }
+        }
     }
 
     private void showProgress(boolean visible) {
@@ -669,7 +671,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     /**
      * Le'ts ask if we really want to cancel the current download.
      */
-    private void cancelDownload() {
+    private void cancelDownloadDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.cancel_download_msg)
                 .setCancelable(false)
@@ -688,16 +690,16 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         alert.show();
     }
 
-    private void reconnectConnection(final String url) {
+    private void downloadGuideDialog(final String url, String message, String positiveMsg) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.error_download_retry)
+        builder.setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(positiveMsg, new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         downloadFile(url);
                     }
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         dialog.cancel();
                     }
@@ -711,16 +713,16 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         guidesList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                if (parent.isGroupExpanded(groupPosition)) {
-                    parent.collapseGroup(groupPosition);
+                // We don't need to collapse , let's just take the first row
+                GuideVersion version = (GuideVersion) adapter.getChild(groupPosition, 0);
+                if (folderUtil.checkIfFolderExist(Constants.UNZIP_DIR + folderUtil.getNameFromPath(version.getFile()))) {
+                    goToFolder(Constants.UNZIP_DIR + folderUtil.getNameFromPath(version.getFile()));
                 } else {
-                    //Chicle para obtener la ultima visible
-                    int lastVis = parent.getLastVisiblePosition();
-                    long packedPosition = parent.getExpandableListPosition(lastVis);
-                    int realLastVis = ExpandableListView.getPackedPositionGroup(packedPosition);
-                    parent.expandGroup(groupPosition, true);
-                    if (groupPosition == realLastVis)
-                        parent.setSelection(groupPosition);
+                    if (networkUtil.isNetworkAvailable()) {
+                        downloadGuideDialog(Constants.DOMAIN + version.getFile(), getString(R.string.download_guide_msg), getString(R.string.start_download));
+                    } else {
+                        eventBus.post(new ToastEvent(getString(R.string.internet_not_available)));
+                    }
                 }
                 return true;
             }

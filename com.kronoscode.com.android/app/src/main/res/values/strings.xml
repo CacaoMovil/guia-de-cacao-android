@@ -15,7 +15,7 @@
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_about">Acerca de</string>
     <string name="title_load_sdCard">Importar desde Memoria Externa</string>
-    <string name="lista_guias">Lista de Guias</string>
+    <string name="guide_list">Lista de Guias</string>
     <string name="download">Descargar</string>
     <string name="open">Abrir</string>
     <string name="internet_not_available">No hay conexión a internet</string>
@@ -28,7 +28,7 @@
     <string name="cancel_download_msg">¿ Esta seguro que desea cancelar la descarga ?</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
-    <string name="error_unziping">Something wrong happened trying to unzip this file</string>
+    <string name="error_on_unzip">Something wrong happened trying to unzip this file</string>
     <string name="file_explorer_file">You need to install a file Explorer</string>
     <string name="not_content">No content</string>
     <string name="error_download_retry">Hubo un error al descargar el archivo, ¿ desea intentarlo nuevamente ?</string>
@@ -39,4 +39,7 @@
     <string name="location">"Location: "</string>
     <string name="select">Seleccionar</string>
     <string name="select_file">"Desea Seleccionar este archivo:  "</string>
+    <string name="download_guide_msg">Esta guia no esta descargada en su dispositivo, ¿ desea iniciar el proceso de descarga ?</string>
+    <string name="start_download">Iniciar Descarga</string>
+    <string name="no_index_found">Index file does not exist in this folder</string>
 </resources>

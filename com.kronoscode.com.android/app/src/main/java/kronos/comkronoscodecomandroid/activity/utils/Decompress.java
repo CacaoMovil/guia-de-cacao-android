@@ -4,7 +4,6 @@ package kronos.comkronoscodecomandroid.activity.utils;
  * Created by jhon on 6/3/15.
  */
 
-import android.nfc.Tag;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -23,14 +22,14 @@ import javax.inject.Singleton;
  * @author jhon chavarria
  *
  */
-
 public class Decompress {
-    private String _zipFile;
-    private String _location;
+
+    private String zipFile;
+    private String location;
 
     public Decompress(String zipFile, String location) {
-        _zipFile = zipFile;
-        _location = location;
+        this.zipFile = zipFile;
+        this.location = location;
     }
 
     /**
@@ -45,20 +44,20 @@ public class Decompress {
         byte[] buffer = new byte[BUFFER_SIZE];
 
         try {
-            if ( !_location.endsWith("/") ) {
-                _location += "/";
+            if (!location.endsWith("/")) {
+                location += "/";
             }
-            File f = new File(_location);
-            Log.d("CACAODEBUG", f.getName());
+
+            File f = new File(location);
             if(!f.isDirectory()) {
                 f.mkdirs();
             }
-            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(_zipFile), BUFFER_SIZE));
+            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), BUFFER_SIZE));
+
             try {
                 ZipEntry ze;
                 while ((ze = zin.getNextEntry()) != null) {
-                    String path = _location + ze.getName();;
-                    Log.d("CACAO", path);
+                    String path = location + ze.getName();
                     File unzipFile = new File(path);
 
                     if (ze.isDirectory()) {
@@ -73,7 +72,6 @@ public class Decompress {
                                 parentDir.mkdirs();
                             }
                         }
-
                         // unzip the file
                         FileOutputStream out = new FileOutputStream(unzipFile, false);
                         BufferedOutputStream fout = new BufferedOutputStream(out, BUFFER_SIZE);
@@ -96,7 +94,7 @@ public class Decompress {
             }
         }
         catch (Exception e) {
-            Log.e("CACAODEBUG", "Unzip exception", e);
+            Log.e("CACAO DEBUG", "Unzip exception", e);
         }
     }
 }

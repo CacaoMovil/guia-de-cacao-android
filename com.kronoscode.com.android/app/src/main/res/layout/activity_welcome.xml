@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:background="@drawable/btn"
-            android:text="@string/lista_guias"
+            android:text="@string/guide_list"
             android:textAllCaps="true"
             android:textColor="@android:color/white" />
 

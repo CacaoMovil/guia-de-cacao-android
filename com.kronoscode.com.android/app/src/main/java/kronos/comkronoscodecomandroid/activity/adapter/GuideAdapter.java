@@ -1,7 +1,6 @@
 package kronos.comkronoscodecomandroid.activity.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,20 +20,16 @@ import java.util.List;
 import java.util.Map;
 
 import kronos.comkronoscodecomandroid.R;
-import kronos.comkronoscodecomandroid.activity.utils.Utils;
+import kronos.comkronoscodecomandroid.activity.utils.GuideUtils;
 
 public class GuideAdapter extends BaseExpandableListAdapter implements Filterable {
 
 	private Map<String, List<GuideVersion>> mChildrenList, mChildrenListFilter;
     private final LayoutInflater mInflater;
-	private Context context;
     private ListView mGuideList;
     private TextView mEmpty;
 
-
-    public GuideAdapter(Context context,
-                        Map<String, List<GuideVersion>> children, ListView guidelist, TextView empty) {
-		this.context = context;
+    public GuideAdapter(Context context, Map<String, List<GuideVersion>> children, ListView guidelist, TextView empty) {
 		this.mChildrenList = children;
         this.mChildrenListFilter = children;
         this.mGuideList = guidelist;
@@ -76,34 +71,7 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
 		return groupPosition;
 	}
 
-	public View getChildView(int groupPosition, int childPosition,
-			boolean isLastChild, View convertView, ViewGroup parent) {
-
-        ChildrenHolder holder;
-
-        if (convertView==null) {
-            convertView = mInflater.inflate(R.layout.group_item,null);
-            holder = new ChildrenHolder();
-            holder.mDate = (TextView)convertView.findViewById(R.id.date);
-            holder.mVersion = (TextView)convertView.findViewById(R.id.version);
-            holder.mAction= (Button)convertView.findViewById(R.id.action);
-
-            convertView.setTag(holder);
-        } else holder = (ChildrenHolder)convertView.getTag();
-
-        GuideVersion version = (GuideVersion) getChild(groupPosition, childPosition);
-
-        holder.mDate.setText("Fecha: " + (version.getDate()));
-        holder.mVersion.setText("Version: " + (version.getNumVersion()));
-
-        holder.mAction.setClickable(false);
-
-        if (Utils.checkIfFolderExist(Utils.UNZIP_DIR +  Utils.getNameFromPath(version.getFile()))) {
-            holder.mAction.setText(R.string.open);
-        } else {
-            holder.mAction.setText(R.string.download);
-        }
-
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         return convertView;
 	}
 
@@ -219,13 +187,5 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
     final static class GroupHolder {
         TextView group;
         TextView guideNumber;
-    }
-
-    final static class ChildrenHolder {
-        //TextView mName;
-        TextView mDate;
-        TextView mVersion;
-        //TextView mState;
-        Button mAction;
     }
 }

@@ -15,11 +15,15 @@ import android.webkit.WebViewClient;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import kronos.comkronoscodecomandroid.R;
+import kronos.comkronoscodecomandroid.activity.App;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
-import kronos.comkronoscodecomandroid.activity.utils.Utils;
+import kronos.comkronoscodecomandroid.activity.event.ToastEvent;
 import pocketknife.BindExtra;
 import pocketknife.PocketKnife;
 
@@ -34,12 +38,16 @@ public class GuideActivity extends BaseActivity {
     @BindExtra(Constants.FILE)
     String filePath;
 
+    @Inject
+    EventBus eventBus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
         ButterKnife.bind(this);
         PocketKnife.bindExtras(this);
+        App.getInjectComponent(this).inject(this);
 
         setSupportActionBar(toolbar);
         setTitle(getString(R.string.title));
@@ -68,7 +76,7 @@ public class GuideActivity extends BaseActivity {
 
                 browser.loadUrl("file://" + filePath);
             } else {
-                Utils.toastMessage(this, "Index file does not exist in this folder");
+                eventBus.post(new ToastEvent(getString(R.string.no_index_found)));
             }
         }
     }
