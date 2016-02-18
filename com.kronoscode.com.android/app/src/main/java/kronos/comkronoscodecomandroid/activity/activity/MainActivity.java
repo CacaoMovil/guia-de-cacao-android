@@ -84,7 +84,6 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     private ProgressDialog progressDialog;
     private String filename;
     private GuideAdapter adapter;
-    //private int currentGroup = -1;
     private SearchView searchView;
     private DownloadFileAsync task;
 
@@ -211,13 +210,11 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-        // temporarily disabled
+        // nothing
         return true;
     }
-
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -249,31 +246,33 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
      * This function will request data from the server
      */
     public void getRemoteData() {
-        if (networkUtil.isNetworkAvailable()) {
-            showProgress(true);
 
-            Call<List<Guide>> call = guidesService.getGuides();
-
-            call.enqueue(new Callback<List<Guide>>() {
-
-                @Override
-                public void onResponse(Response<List<Guide>> response, Retrofit retrofit) {
-                    if (response.body() != null) {
-                        postData(response.body());
-                    } else {
-                        postData(null);
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    eventBus.post(new ToastEvent(t.getMessage()));
-                }
-            });
-
-        } else {
-            restartLoader();
+        if (!networkUtil.isNetworkAvailable()) {
+            return;
         }
+
+        showProgress(true);
+
+        Call<List<Guide>> call = guidesService.getGuides();
+
+        call.enqueue(new Callback<List<Guide>>() {
+
+            @Override
+            public void onResponse(Response<List<Guide>> response, Retrofit retrofit) {
+                if (response.body() != null) {
+                    postData(response.body());
+                } else {
+                    postData(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                eventBus.post(new ToastEvent(t.getMessage()));
+            }
+        });
+
+        restartLoader();
     }
 
     /**
@@ -693,7 +692,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     private void downloadGuideDialog(final String url, String message, String positiveMsg) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message)
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton(positiveMsg, new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         downloadFile(url);
@@ -708,6 +707,25 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         alert.show();
     }
 
+    private void newGuideUpdateDialog(final String url, final String guideName, final String version) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.new_guide_version_msg))
+                .setCancelable(true)
+                .setPositiveButton(getString(R.string.start_download), new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        downloadFile(url);
+                    }
+                })
+                .setNegativeButton(R.string.open_current_guide, new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        String currentAvailableFile = guideUtils.returnCurrentAvailableGuide(guideName, Integer.parseInt(version));
+                        goToFolder(Constants.UNZIP_DIR + currentAvailableFile);
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     private void listViewAction() {
         guidesList.setOnChildClickListener(this);
         guidesList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -715,9 +733,13 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 // We don't need to collapse , let's just take the first row
                 GuideVersion version = (GuideVersion) adapter.getChild(groupPosition, 0);
+
+                // Order : if guide exists, if there is an update, download guide
                 if (folderUtil.checkIfFolderExist(Constants.UNZIP_DIR + folderUtil.getNameFromPath(version.getFile()))) {
                     goToFolder(Constants.UNZIP_DIR + folderUtil.getNameFromPath(version.getFile()));
-                } else {
+                } else if (guideUtils.isAnUpdate(version.getName(), Integer.parseInt(version.getNumVersion()))) {
+                    newGuideUpdateDialog(Constants.DOMAIN + version.getFile(), version.getName(), version.getNumVersion());
+                }  else  {
                     if (networkUtil.isNetworkAvailable()) {
                         downloadGuideDialog(Constants.DOMAIN + version.getFile(), getString(R.string.download_guide_msg), getString(R.string.start_download));
                     } else {

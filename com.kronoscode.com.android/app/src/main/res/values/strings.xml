@@ -42,4 +42,6 @@
     <string name="download_guide_msg">Esta guia no esta descargada en su dispositivo, ¿ desea iniciar el proceso de descarga ?</string>
     <string name="start_download">Iniciar Descarga</string>
     <string name="no_index_found">Index file does not exist in this folder</string>
+    <string name="new_guide_version_msg">Hay una nueva version de esta guia, desea descargarla ?</string>
+    <string name="open_current_guide">Abrir Actual</string>
 </resources>

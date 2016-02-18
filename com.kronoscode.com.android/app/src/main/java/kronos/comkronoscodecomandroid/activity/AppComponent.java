@@ -9,6 +9,7 @@ import kronos.comkronoscodecomandroid.activity.activity.BaseActivity;
 import kronos.comkronoscodecomandroid.activity.activity.GuideActivity;
 import kronos.comkronoscodecomandroid.activity.activity.MainActivity;
 import kronos.comkronoscodecomandroid.activity.activity.WelcomeActivity;
+import kronos.comkronoscodecomandroid.activity.adapter.GuideAdapter;
 import kronos.comkronoscodecomandroid.activity.api.ApiModule;
 
 /**
@@ -34,6 +35,9 @@ public interface AppComponent {
     void inject(GuideActivity target);
 
     void inject(WelcomeActivity  target);
+
+    // Adapters
+    void inject(GuideAdapter target);
 
 }
 

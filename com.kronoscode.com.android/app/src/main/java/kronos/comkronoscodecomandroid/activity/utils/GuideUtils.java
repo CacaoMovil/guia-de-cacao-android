@@ -1,6 +1,7 @@
 package kronos.comkronoscodecomandroid.activity.utils;
 
 import android.app.Application;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -17,6 +18,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import kronos.comkronoscodecomandroid.R;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
 
 
@@ -33,6 +35,9 @@ public class GuideUtils {
     Application application;
 
     @Inject
+    ContentResolver contentResolver;
+
+    @Inject
     public GuideUtils() {
         /// nothing
     }
@@ -44,8 +49,7 @@ public class GuideUtils {
     public List<GuideVersion> getVersionsFromGuide(String groupName) {
         List<GuideVersion> versions = new ArrayList<>();
 
-        Cursor cursor = application.getContentResolver().query(CacaoProvider.GUIDEVERSION_CONTENT_URI, null, GuideVersionTable._ID, null,
-                GuideVersionTable.NUM_VERSION + " DESC");
+        Cursor cursor = contentResolver.query(CacaoProvider.GUIDEVERSION_CONTENT_URI, null, GuideVersionTable._ID, null, GuideVersionTable.NUM_VERSION + " DESC");
 
         int position = 0;
         //flag to check that we already have a downloaded guide on the list
@@ -60,13 +64,13 @@ public class GuideUtils {
 
                     if (groupName.equals(childName)) {
                         boolean theGuideExists = folderUtil.checkIfFolderExist(Constants.UNZIP_DIR + folderUtil.getNameFromPath(fileName) + "index.html");
-                        if (position == 0) {
+                        //if (position == 0) {
                             versions.add(new GuideVersion(cursor, false));
                             thereIsAGuide = theGuideExists;
-                        } else if (theGuideExists && !thereIsAGuide) {
-                            versions.add(new GuideVersion(cursor, false));
-                            thereIsAGuide = true;
-                        }
+                        //} else if (theGuideExists && !thereIsAGuide) {
+                          //  versions.add(new GuideVersion(cursor, false));
+                          //  thereIsAGuide = true;
+                        //}
                         position = position  + 1;
                     }
 
@@ -75,6 +79,41 @@ public class GuideUtils {
         } while (cursor != null && cursor.moveToNext());
 
         return versions;
+    }
+
+    /**
+     * check if there is an update
+     * @param groupName
+     * @param version
+     * @return
+     */
+    public Boolean isAnUpdate(String groupName , int version) {
+        int lastDownload = (version - 1);
+        Cursor cursor = contentResolver.query(CacaoProvider.GUIDEVERSION_CONTENT_URI, null, GuideVersionTable.NAME + "=? AND " + GuideVersionTable.NUM_VERSION + "=?", new String[]{String.valueOf(groupName), String.valueOf(lastDownload)}, GuideVersionTable.NUM_VERSION + " DESC");
+
+        do {
+            if (cursor != null && cursor.moveToFirst()) {
+                String file = cursor.getString(cursor.getColumnIndex(GuideVersionTable.FILE));
+                if (folderUtil.checkIfFolderExist(Constants.UNZIP_DIR +  folderUtil.getNameFromPath(file))) {
+                    return true;
+                }
+            }
+        } while (cursor != null && cursor.moveToNext());
+
+        return false;
+    }
+
+    public String returnCurrentAvailableGuide(String groupName , int version) {
+        int lastDownload = (version - 1);
+        Cursor cursor = contentResolver.query(CacaoProvider.GUIDEVERSION_CONTENT_URI, null, GuideVersionTable.NAME + "=? AND " + GuideVersionTable.NUM_VERSION + "=?", new String[]{String.valueOf(groupName), String.valueOf(lastDownload)}, GuideVersionTable.NUM_VERSION + " DESC");
+
+        do {
+            if (cursor != null && cursor.moveToFirst()) {
+                return folderUtil.getNameFromPath(cursor.getString(cursor.getColumnIndex(GuideVersionTable.FILE)));
+            }
+        } while (cursor != null && cursor.moveToNext());
+
+        return null;
     }
 
 }

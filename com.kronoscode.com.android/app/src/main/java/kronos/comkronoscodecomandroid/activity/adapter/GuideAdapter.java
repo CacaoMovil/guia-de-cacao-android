@@ -19,7 +19,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import kronos.comkronoscodecomandroid.R;
+import kronos.comkronoscodecomandroid.activity.App;
+import kronos.comkronoscodecomandroid.activity.constants.Constants;
+import kronos.comkronoscodecomandroid.activity.utils.FolderUtil;
 import kronos.comkronoscodecomandroid.activity.utils.GuideUtils;
 
 public class GuideAdapter extends BaseExpandableListAdapter implements Filterable {
@@ -29,8 +34,12 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
     private ListView mGuideList;
     private TextView mEmpty;
 
+    @Inject
+    FolderUtil folderUtil;
+
     public GuideAdapter(Context context, Map<String, List<GuideVersion>> children, ListView guidelist, TextView empty) {
-		this.mChildrenList = children;
+        App.getInjectComponent(context).inject(this);
+        this.mChildrenList = children;
         this.mChildrenListFilter = children;
         this.mGuideList = guidelist;
         this.mEmpty = empty;
@@ -72,6 +81,32 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
 	}
 
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+
+        ChildrenHolder holder;
+
+        if (convertView==null) {
+            convertView = mInflater.inflate(R.layout.group_item,null);
+            holder = new ChildrenHolder();
+            holder.mDate = (TextView)convertView.findViewById(R.id.date);
+            holder.mVersion = (TextView)convertView.findViewById(R.id.version);
+            holder.mAction= (Button)convertView.findViewById(R.id.action);
+
+            convertView.setTag(holder);
+        } else holder = (ChildrenHolder)convertView.getTag();
+
+        GuideVersion version = (GuideVersion) getChild(groupPosition, childPosition);
+
+        holder.mDate.setText("Fecha: " + (version.getFile()));
+        holder.mVersion.setText("Version: " + (version.getNumVersion()));
+
+        holder.mAction.setClickable(false);
+
+        if (folderUtil.checkIfFolderExist(Constants.UNZIP_DIR +  folderUtil.getNameFromPath(version.getFile()))) {
+            holder.mAction.setText(R.string.open);
+        } else {
+            holder.mAction.setText(R.string.download);
+        }
+
         return convertView;
 	}
 
@@ -187,5 +222,13 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
     final static class GroupHolder {
         TextView group;
         TextView guideNumber;
+    }
+
+    final static class ChildrenHolder {
+        //TextView mName;
+        TextView mDate;
+        TextView mVersion;
+        //TextView mState;
+        Button mAction;
     }
 }
