@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -60,6 +61,7 @@ import kronos.comkronoscodecomandroid.activity.api.GuidesService;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
 import kronos.comkronoscodecomandroid.activity.event.ToastEvent;
 import kronos.comkronoscodecomandroid.activity.object.Content;
+import kronos.comkronoscodecomandroid.activity.prefs.PersistentStore;
 import kronos.comkronoscodecomandroid.activity.utils.DatabaseUtil;
 import kronos.comkronoscodecomandroid.activity.utils.Decompress;
 import kronos.comkronoscodecomandroid.activity.utils.FolderUtil;
@@ -194,7 +196,6 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
-
             if (networkUtil.isNetworkAvailable()) {
                 getRemoteData();
             } else {
@@ -205,8 +206,9 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         } else if (id == R.id.action_import) {
             Intent intent = new Intent(this, FilesProviderActivity.class);
             startActivityForResult(intent, REQUEST_ID);
+        } else if (id == R.id.action_update_api) {
+            changeApiPopUp();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -739,7 +741,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                     goToFolder(Constants.UNZIP_DIR + folderUtil.getNameFromPath(version.getFile()));
                 } else if (guideUtils.isAnUpdate(version.getName(), Integer.parseInt(version.getNumVersion()))) {
                     newGuideUpdateDialog(Constants.DOMAIN + version.getFile(), version.getName(), version.getNumVersion());
-                }  else  {
+                } else {
                     if (networkUtil.isNetworkAvailable()) {
                         downloadGuideDialog(Constants.DOMAIN + version.getFile(), getString(R.string.download_guide_msg), getString(R.string.start_download));
                     } else {
@@ -749,5 +751,29 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 return true;
             }
         });
+    }
+
+    private void changeApiPopUp() {
+        final  android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(this);
+
+        alert.setTitle(getString(R.string.title));
+        alert.setMessage(getString(R.string.current_api));
+
+        final EditText input = new EditText(this);
+        input.setText(persistentStore.get(PersistentStore.API_URL, Constants.DEFAULT_API_URL));
+        alert.setView(input);
+
+        alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                persistentStore.set(PersistentStore.API_URL, input.getText().toString());
+            }
+        });
+
+        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+        alert.show();
     }
 }

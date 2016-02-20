@@ -15,4 +15,7 @@
     <item android:id="@+id/action_import" android:title="@string/action_import"
         android:orderInCategory="100" app:showAsAction="never" />
 
+    <item android:id="@+id/action_update_api" android:title="@string/action_update_api"
+        android:orderInCategory="100" app:showAsAction="never" />
+
 </menu>
