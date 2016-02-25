@@ -1,5 +1,8 @@
 package kronos.comkronoscodecomandroid.activity.api;
 
+import android.app.Application;
+import android.preference.PreferenceManager;
+
 import javax.inject.Inject;
 
 import dagger.Module;
@@ -13,11 +16,8 @@ import retrofit.Retrofit;
 @Module
 public class ApiModule {
 
-    @Inject
-    PersistentStore persistentStore;
-
     @Provides
-    public GuidesService provideGuidesService() {
+    public GuidesService provideGuidesService(PersistentStore persistentStore) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(persistentStore.get(PersistentStore.API_URL, Constants.DEFAULT_API_URL))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -26,7 +26,7 @@ public class ApiModule {
     }
 
     @Provides
-    public SettingsService settingsService() {
+    public SettingsService settingsService(PersistentStore persistentStore) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(persistentStore.get(PersistentStore.API_URL, Constants.DEFAULT_API_URL))
                 .addConverterFactory(GsonConverterFactory.create())

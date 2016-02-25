@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import de.greenrobot.event.EventBus;
+import kronos.comkronoscodecomandroid.activity.api.ApiModule;
 
 /**
  * Created by jhon on 12/02/16.
@@ -15,7 +16,7 @@ import de.greenrobot.event.EventBus;
 @Module(
         includes = {
                 AndroidModule.class,
-                //ApiModule.class
+                ApiModule.class
         }
 )
 public class AppModule {

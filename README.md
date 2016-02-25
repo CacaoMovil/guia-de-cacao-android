@@ -12,7 +12,12 @@ El proyecto Caja de Herramientas para Cacao Android esta elaborado usando el len
 
 * Java 1.7
 * Android Studio 1.1
-* Retrofit 1.9
+* Retrofit 2.0
+* Dagger 2 ( Dependency Injection)
+* Piccaso  2.5
+* Butterknife 7.9 
+* EventBus 3.0 
+* PocketKnife 7.0 
 
 ### Instalando Java
 
