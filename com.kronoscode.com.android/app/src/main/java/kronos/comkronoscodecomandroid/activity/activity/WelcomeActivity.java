@@ -35,8 +35,6 @@ public class WelcomeActivity extends BaseActivity {
     @Bind(R.id.welcome_title)
     TextView welcomeTitle;
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
 
     @Bind(R.id.logo)
     ImageView logoImageView;
@@ -53,8 +51,6 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.activity_welcome);
         App.getInjectComponent(this).inject(this);
         ButterKnife.bind(this);
-
-        setSupportActionBar(toolbar);
 
         fillCacaoInfo();
     }

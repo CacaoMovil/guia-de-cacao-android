@@ -6,9 +6,6 @@
     android:background="@drawable/background"
     tools:context="kronos.comkronoscodecomandroid.activity.activity.WelcomeActivity">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/app_toolbar"/> 
 
     <ImageView
         android:id="@+id/logo"
