@@ -27,7 +27,7 @@
         <item name="android:textSize">@dimen/abc_text_size_title_material_toolbar</item>
         <!-- Set title color -->
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
 </resources>
