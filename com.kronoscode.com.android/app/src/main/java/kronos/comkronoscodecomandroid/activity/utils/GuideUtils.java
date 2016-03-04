@@ -32,9 +32,6 @@ public class GuideUtils {
     FolderUtil folderUtil;
 
     @Inject
-    Application application;
-
-    @Inject
     ContentResolver contentResolver;
 
     @Inject
@@ -52,25 +49,13 @@ public class GuideUtils {
         Cursor cursor = contentResolver.query(CacaoProvider.GUIDEVERSION_CONTENT_URI, null, GuideVersionTable._ID, null, GuideVersionTable.NUM_VERSION + " DESC");
 
         int position = 0;
-        //flag to check that we already have a downloaded guide on the list
-        boolean thereIsAGuide = false;
-
         do {
             if (cursor != null && cursor.moveToFirst()) {
 
                 do {
                     String childName = cursor.getString(cursor.getColumnIndex(GuideVersionTable.NAME));
-                    String fileName = cursor.getString(cursor.getColumnIndex(GuideVersionTable.FILE));
-
                     if (groupName.equals(childName)) {
-                        boolean theGuideExists = folderUtil.checkIfFolderExist(Constants.UNZIP_DIR + folderUtil.getNameFromPath(fileName) + "index.html");
-                        //if (position == 0) {
-                            versions.add(new GuideVersion(cursor, false));
-                            thereIsAGuide = theGuideExists;
-                        //} else if (theGuideExists && !thereIsAGuide) {
-                          //  versions.add(new GuideVersion(cursor, false));
-                          //  thereIsAGuide = true;
-                        //}
+                        versions.add(new GuideVersion(cursor, false));
                         position = position  + 1;
                     }
 

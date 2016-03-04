@@ -1,13 +1,7 @@
 package kronos.comkronoscodecomandroid.activity.api;
 
-import android.app.Application;
-import android.preference.PreferenceManager;
-
-import javax.inject.Inject;
-
 import dagger.Module;
 import dagger.Provides;
-import kronos.comkronoscodecomandroid.BuildConfig;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
 import kronos.comkronoscodecomandroid.activity.prefs.PersistentStore;
 import retrofit.GsonConverterFactory;

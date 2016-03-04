@@ -60,6 +60,7 @@ import kronos.comkronoscodecomandroid.activity.adapter.GuideAdapter;
 import kronos.comkronoscodecomandroid.activity.api.GuidesService;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
 import kronos.comkronoscodecomandroid.activity.event.ToastEvent;
+import kronos.comkronoscodecomandroid.activity.event.UpdateSettingsEvent;
 import kronos.comkronoscodecomandroid.activity.object.Content;
 import kronos.comkronoscodecomandroid.activity.prefs.PersistentStore;
 import kronos.comkronoscodecomandroid.activity.utils.DatabaseUtil;
@@ -740,10 +741,10 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 if (folderUtil.checkIfFolderExist(Constants.UNZIP_DIR + folderUtil.getNameFromPath(version.getFile()))) {
                     goToFolder(Constants.UNZIP_DIR + folderUtil.getNameFromPath(version.getFile()));
                 } else if (guideUtils.isAnUpdate(version.getName(), Integer.parseInt(version.getNumVersion()))) {
-                    newGuideUpdateDialog(Constants.DOMAIN + version.getFile(), version.getName(), version.getNumVersion());
+                    newGuideUpdateDialog(version.getFile(), version.getName(), version.getNumVersion());
                 } else {
                     if (networkUtil.isNetworkAvailable()) {
-                        downloadGuideDialog(Constants.DOMAIN + version.getFile(), getString(R.string.download_guide_msg), getString(R.string.start_download));
+                        downloadGuideDialog(version.getFile(), getString(R.string.download_guide_msg), getString(R.string.start_download));
                     } else {
                         eventBus.post(new ToastEvent(getString(R.string.internet_not_available)));
                     }
@@ -766,6 +767,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 persistentStore.set(PersistentStore.API_URL, input.getText().toString());
+                bus.post(new UpdateSettingsEvent());
             }
         });
 

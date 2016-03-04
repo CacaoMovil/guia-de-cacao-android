@@ -23,7 +23,6 @@ public class Constants {
     public static final String DEFAULT_API_URL = "http://cacao.kronoscode.com/api/v1/";
 
     public static final String FILE_MANAGER_PLAYSTORE  = "com.estrongs.android.pop&hl=en";
-    public static final String DOMAIN = "http://cacaomovil.com";
     public static final String ZIP_DIR = Environment.getExternalStorageDirectory().getPath() + "/zip_guias/";
     public static final String UNZIP_DIR = Environment.getExternalStorageDirectory().getPath() + "/guias/";
     public static final String LINK_SPLIT = "descargas/";

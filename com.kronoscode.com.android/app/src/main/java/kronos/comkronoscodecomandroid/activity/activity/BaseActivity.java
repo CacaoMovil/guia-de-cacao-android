@@ -1,5 +1,6 @@
 package kronos.comkronoscodecomandroid.activity.activity;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,9 +17,12 @@ import java.util.TimerTask;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 import kronos.comkronoscodecomandroid.R;
 import kronos.comkronoscodecomandroid.activity.App;
 import kronos.comkronoscodecomandroid.activity.api.SettingsService;
+import kronos.comkronoscodecomandroid.activity.event.UpdateSettingsEvent;
 import kronos.comkronoscodecomandroid.activity.object.Setting;
 import kronos.comkronoscodecomandroid.activity.prefs.PersistentStore;
 import retrofit.Call;
@@ -39,6 +43,9 @@ public class BaseActivity extends AppCompatActivity {
 
     @Inject
     PersistentStore persistentStore;
+
+    @Inject
+    EventBus bus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +108,18 @@ public class BaseActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        bus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        bus.unregister(this);
+        super.onStop();
+    }
+
     private void startTimer() {
 
         stopTimer();
@@ -123,7 +142,7 @@ public class BaseActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                getSettings();
+                bus.post(new UpdateSettingsEvent());
             }
         }, nextUpdate);
 
@@ -134,5 +153,10 @@ public class BaseActivity extends AppCompatActivity {
             timer.cancel();
             timer.purge();
         }
+    }
+
+    @Subscribe
+    public void onUpdateSettingsEvent(UpdateSettingsEvent event) {
+        getSettings();
     }
 }
