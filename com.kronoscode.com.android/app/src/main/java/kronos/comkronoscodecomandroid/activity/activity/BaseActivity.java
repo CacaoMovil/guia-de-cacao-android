@@ -25,6 +25,7 @@ import kronos.comkronoscodecomandroid.activity.api.SettingsService;
 import kronos.comkronoscodecomandroid.activity.event.UpdateSettingsEvent;
 import kronos.comkronoscodecomandroid.activity.object.Setting;
 import kronos.comkronoscodecomandroid.activity.prefs.PersistentStore;
+import kronos.comkronoscodecomandroid.activity.utils.NetworkUtil;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
@@ -39,13 +40,7 @@ public class BaseActivity extends AppCompatActivity {
     private Timer timer;
 
     @Inject
-    SettingsService settingsService;
-
-    @Inject
     PersistentStore persistentStore;
-
-    @Inject
-    EventBus bus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,30 +66,7 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getSettings() {
 
-        Call<Setting> call = settingsService.getSettings();
-
-        call.enqueue(new Callback<Setting>() {
-
-            @Override
-            public void onResponse(Response<Setting> response, Retrofit retrofit) {
-                if (response.body() != null) {
-                    persistentStore.set(PersistentStore.TITLE_CACACO, response.body().getTitle());
-                    persistentStore.set(PersistentStore.WELCOME_CACAO, response.body().getWelcome_title());
-                    persistentStore.set(PersistentStore.LOGO_CACAO, response.body().getLogo());
-                    // Register last update
-                    Date currentDate = new Date(System.currentTimeMillis());
-                    persistentStore.set(PersistentStore.LAST_UPDATE, currentDate.getTime());
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-
-            }
-        });
-    }
 
     @Override
     protected void onPause() {
@@ -106,18 +78,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         startTimer();
         super.onResume();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        bus.register(this);
-    }
-
-    @Override
-    public void onStop() {
-        bus.unregister(this);
-        super.onStop();
     }
 
     private void startTimer() {
@@ -142,7 +102,7 @@ public class BaseActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                bus.post(new UpdateSettingsEvent());
+               // nothing yet
             }
         }, nextUpdate);
 
@@ -153,10 +113,5 @@ public class BaseActivity extends AppCompatActivity {
             timer.cancel();
             timer.purge();
         }
-    }
-
-    @Subscribe
-    public void onUpdateSettingsEvent(UpdateSettingsEvent event) {
-        getSettings();
     }
 }

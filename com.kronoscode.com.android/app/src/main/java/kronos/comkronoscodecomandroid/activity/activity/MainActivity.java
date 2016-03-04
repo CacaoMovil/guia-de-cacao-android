@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,10 +59,12 @@ import kronos.comkronoscodecomandroid.R;
 import kronos.comkronoscodecomandroid.activity.App;
 import kronos.comkronoscodecomandroid.activity.adapter.GuideAdapter;
 import kronos.comkronoscodecomandroid.activity.api.GuidesService;
+import kronos.comkronoscodecomandroid.activity.api.SettingsService;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
 import kronos.comkronoscodecomandroid.activity.event.ToastEvent;
 import kronos.comkronoscodecomandroid.activity.event.UpdateSettingsEvent;
 import kronos.comkronoscodecomandroid.activity.object.Content;
+import kronos.comkronoscodecomandroid.activity.object.Setting;
 import kronos.comkronoscodecomandroid.activity.prefs.PersistentStore;
 import kronos.comkronoscodecomandroid.activity.utils.DatabaseUtil;
 import kronos.comkronoscodecomandroid.activity.utils.Decompress;
@@ -133,6 +136,9 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Inject
     NetworkUtil networkUtil;
+
+    @Inject
+    SettingsService settingsService2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -767,7 +773,8 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 persistentStore.set(PersistentStore.API_URL, input.getText().toString());
-                bus.post(new UpdateSettingsEvent());
+                finish();
+                startActivity(getIntent());
             }
         });
 
@@ -778,4 +785,12 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         });
         alert.show();
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
 }
