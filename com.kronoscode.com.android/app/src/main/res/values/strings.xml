@@ -15,7 +15,7 @@
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_about">Acerca de</string>
     <string name="title_load_sdCard">Importar desde Memoria Externa</string>
-    <string name="guide_list">Lista de Guias</string>
+    <string name="guide_list">Lista de Guías</string>
     <string name="download">Descargar</string>
     <string name="open">Abrir</string>
     <string name="internet_not_available">No hay conexión a internet</string>
