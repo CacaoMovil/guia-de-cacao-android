@@ -51,8 +51,6 @@ public class WelcomeActivity extends BaseActivity {
         setContentView(R.layout.activity_welcome);
         App.getInjectComponent(this).inject(this);
         ButterKnife.bind(this);
-
-        fillCacaoInfo();
     }
 
     @OnClick(R.id.btn_go_to_list)
