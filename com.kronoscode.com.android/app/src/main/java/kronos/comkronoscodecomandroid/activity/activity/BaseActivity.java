@@ -42,6 +42,12 @@ public class BaseActivity extends AppCompatActivity {
     @Inject
     PersistentStore persistentStore;
 
+    @Inject
+    SettingsService settings;
+
+    @Inject
+    NetworkUtil networkUtil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +108,7 @@ public class BaseActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-               // nothing yet
+                getSettings();
             }
         }, nextUpdate);
 
@@ -113,5 +119,33 @@ public class BaseActivity extends AppCompatActivity {
             timer.cancel();
             timer.purge();
         }
+    }
+
+    public void getSettings() {
+
+        if (!networkUtil.isNetworkAvailable()) {
+            return;
+        }
+
+        Call<Setting> call = settings.getSettings();
+
+        call.enqueue(new Callback<Setting>() {
+
+            @Override
+            public void onResponse(Response<Setting> response, Retrofit retrofit) {
+                if (response.body() != null) {
+                    persistentStore.set(PersistentStore.TITLE_CACACO, response.body().getTitle());
+                    persistentStore.set(PersistentStore.WELCOME_CACAO, response.body().getWelcome_title());
+                    persistentStore.set(PersistentStore.LOGO_CACAO, response.body().getLogo());
+                    // Register last update
+                    Date currentDate = new Date(System.currentTimeMillis());
+                    persistentStore.set(PersistentStore.LAST_UPDATE, currentDate.getTime());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        });
     }
 }
