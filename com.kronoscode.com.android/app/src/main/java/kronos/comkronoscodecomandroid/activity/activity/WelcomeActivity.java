@@ -86,4 +86,10 @@ public class WelcomeActivity extends BaseActivity {
 
         imageUtil.loadImage(logoImageView, logo);
     }
+
+    @Override
+    protected void onResume() {
+        fillCacaoInfo();
+        super.onResume();
+    }
 }
