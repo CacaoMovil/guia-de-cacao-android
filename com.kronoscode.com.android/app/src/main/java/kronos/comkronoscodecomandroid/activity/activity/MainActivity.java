@@ -255,8 +255,9 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
      * This function will request data from the server
      */
     public void getRemoteData() {
-
         if (!networkUtil.isNetworkAvailable()) {
+            restartLoader();
+            showProgress(false);
             return;
         }
 
@@ -278,6 +279,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             @Override
             public void onFailure(Throwable t) {
                 eventBus.post(new ToastEvent(t.getMessage()));
+                showProgress(false);
             }
         });
 
@@ -564,7 +566,6 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     public void displayView(Map<String, List<GuideVersion>> hashMap) {
         adapter = new GuideAdapter(this, hashMap, guidesList, empty);
         guidesList.setAdapter(adapter);
-
         if (query != null) {
             if (!query.equals("")) {
                 searchView.setQuery(query, true);
