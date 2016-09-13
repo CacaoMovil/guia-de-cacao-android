@@ -1,5 +1,6 @@
 package kronos.comkronoscodecomandroid.activity.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.LoaderManager;
@@ -9,10 +10,14 @@ import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +30,10 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.kronoscode.cacao.android.app.database.table.GuideTable;
 import com.kronoscode.cacao.android.app.database.table.GuideVersionTable;
@@ -62,9 +71,7 @@ import kronos.comkronoscodecomandroid.activity.api.GuidesService;
 import kronos.comkronoscodecomandroid.activity.api.SettingsService;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
 import kronos.comkronoscodecomandroid.activity.event.ToastEvent;
-import kronos.comkronoscodecomandroid.activity.event.UpdateSettingsEvent;
 import kronos.comkronoscodecomandroid.activity.object.Content;
-import kronos.comkronoscodecomandroid.activity.object.Setting;
 import kronos.comkronoscodecomandroid.activity.prefs.PersistentStore;
 import kronos.comkronoscodecomandroid.activity.utils.DatabaseUtil;
 import kronos.comkronoscodecomandroid.activity.utils.Decompress;
@@ -85,6 +92,7 @@ import retrofit.Retrofit;
 public class MainActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, ExpandableListView.OnChildClickListener {
 
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
+    public int MY_PERMISSION_THING = 0;
     private static final int REQUEST_ID = 1;
     private static final int LOADER_ID = 0;
     private ProgressDialog progressDialog;
@@ -139,6 +147,11 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Inject
     SettingsService settingsService2;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +180,9 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 new unzipFile().execute(file);
             }
         }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -370,6 +386,42 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     }
 
     /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
+
+    /**
      * This class will download the file
      */
 
@@ -405,6 +457,29 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 connection.setUseCaches(false);
                 connection.setConnectTimeout(5000); //set timeout to 5 seconds
                 connection.setDoInput(true);
+
+                //CHeck for permissions on android M
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    int permissionCheck = ContextCompat.checkSelfPermission(MainActivity.this,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+                    if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+
+                        } else {
+
+                            ActivityCompat.requestPermissions(MainActivity.this,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    MY_PERMISSION_THING);
+
+                            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                            // app-defined int constant. The callback method gets the
+                            // result of the request.
+                        }
+                    }
+                }
 
                 int lengthOfFile = connection.getContentLength();
 
@@ -762,7 +837,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     }
 
     private void changeApiPopUp() {
-        final  android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(this);
+        final android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(this);
 
         alert.setTitle(getString(R.string.title));
         alert.setMessage(getString(R.string.current_api));

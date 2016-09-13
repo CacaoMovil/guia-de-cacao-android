@@ -1,7 +1,5 @@
 package kronos.comkronoscodecomandroid.activity.activity;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
