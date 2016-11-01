@@ -24,7 +24,7 @@ public class Constants {
 
     public static final String FILE_MANAGER_PLAYSTORE  = "com.estrongs.android.pop&hl=en";
     public static final String ZIP_DIR = Environment.getExternalStorageDirectory().getPath() + "/zip_guias/";
-    public static final String UNZIP_DIR = Environment.getExternalStorageDirectory().getPath() + "/guias/";
+    public static final String UNZIP_DEFAULT_DIR = "cacao móvil";
     public static final String LINK_SPLIT = "descargas/";
 
 }

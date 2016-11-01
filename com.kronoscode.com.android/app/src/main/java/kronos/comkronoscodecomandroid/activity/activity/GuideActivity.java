@@ -65,6 +65,8 @@ public class GuideActivity extends BaseActivity {
                 webSettings.setJavaScriptEnabled(true);
                 webSettings.setBuiltInZoomControls(true);
                 webSettings.setDomStorageEnabled(true);
+                webSettings.setSupportZoom(true);
+
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     webSettings.setAllowUniversalAccessFromFileURLs(true);
@@ -73,6 +75,8 @@ public class GuideActivity extends BaseActivity {
 
                 browser.setWebViewClient(new WebViewClient());
                 browser.setWebChromeClient(new WebChromeClient());
+                browser.getSettings().setBuiltInZoomControls(true);
+                browser.getSettings().setDisplayZoomControls(false);
 
                 browser.loadUrl("file://" + filePath);
             } else {

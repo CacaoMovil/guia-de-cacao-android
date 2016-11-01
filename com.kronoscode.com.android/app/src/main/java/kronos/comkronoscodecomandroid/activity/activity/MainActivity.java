@@ -230,6 +230,8 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             startActivityForResult(intent, REQUEST_ID);
         } else if (id == R.id.action_update_api) {
             changeApiPopUp();
+        } else if (id == R.id.action_update_folder) {
+            changeFolderName();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -559,7 +561,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         protected String doInBackground(String... fileRoot) {
             String zipRoot = fileRoot[0];
             try {
-                Decompress d = new Decompress(zipRoot, Constants.UNZIP_DIR);
+                Decompress d = new Decompress(zipRoot, persistentStore.getFolderName());
                 try {
                     d.unzip();
                 } catch (IOException e) {
@@ -584,7 +586,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
                 if (searchValue.equals(Constants.SOURCE_ONLINE)) {
                     folderUtil.cleanDir(Constants.ZIP_DIR + filename);
-                    goToFolder(Constants.UNZIP_DIR + filename.split(".zip")[0]);
+                    goToFolder(persistentStore.getFolderName() + filename.split(".zip")[0]);
                     restartLoader();
                 } else {
                     try {
@@ -678,7 +680,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             fileName = file[0];
         }
 
-        BufferedReader reader = new BufferedReader(new FileReader(Constants.UNZIP_DIR + fileName + "/manifest.json"));
+        BufferedReader reader = new BufferedReader(new FileReader(persistentStore.getFolderName() + fileName + "/manifest.json"));
         String line, results = "";
         while ((line = reader.readLine()) != null) {
             results += line;
@@ -709,8 +711,8 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
                             String[] separated = version.getFile().split("descargas/");
                             String[] separated2 = separated[1].split(".zip");
-                            File from = new File(Constants.UNZIP_DIR + file[0]);
-                            File to = new File(Constants.UNZIP_DIR + separated2[0]);
+                            File from = new File(persistentStore.getFolderName() + file[0]);
+                            File to = new File(persistentStore.getFolderName() + separated2[0]);
                             from.renameTo(to);
                         }
                     }
@@ -803,7 +805,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 .setNegativeButton(R.string.open_current_guide, new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         String currentAvailableFile = guideUtils.returnCurrentAvailableGuide(guideName, Integer.parseInt(version));
-                        goToFolder(Constants.UNZIP_DIR + currentAvailableFile);
+                        goToFolder(persistentStore.getFolderName() + currentAvailableFile);
                     }
                 });
         final AlertDialog alert = builder.create();
@@ -819,8 +821,8 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 GuideVersion version = (GuideVersion) adapter.getChild(groupPosition, 0);
 
                 // Order : if guide exists, if there is an update, download guide
-                if (folderUtil.checkIfFolderExist(Constants.UNZIP_DIR + folderUtil.getNameFromPath(version.getFile()))) {
-                    goToFolder(Constants.UNZIP_DIR + folderUtil.getNameFromPath(version.getFile()));
+                if (folderUtil.checkIfFolderExist(persistentStore.getFolderName() + folderUtil.getNameFromPath(version.getFile()))) {
+                    goToFolder(persistentStore.getFolderName() + folderUtil.getNameFromPath(version.getFile()));
                 } else if (guideUtils.isAnUpdate(version.getName(), Integer.parseInt(version.getNumVersion()))) {
                     newGuideUpdateDialog(version.getFile(), version.getName(), version.getNumVersion());
                 } else {
@@ -858,6 +860,34 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 // Canceled.
             }
         });
+        alert.show();
+    }
+
+
+    private void changeFolderName() {
+        final android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(this);
+
+        alert.setTitle(getString(R.string.title));
+        alert.setMessage(getString(R.string.current_api));
+
+        final EditText input = new EditText(this);
+        input.setText(persistentStore.get(PersistentStore.FOLDER_NAME, Constants.UNZIP_DEFAULT_DIR));
+        alert.setView(input);
+
+        alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                persistentStore.set(PersistentStore.FOLDER_NAME, input.getText().toString());
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
+        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
         alert.show();
     }
 

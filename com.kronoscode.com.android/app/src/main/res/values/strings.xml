@@ -44,4 +44,6 @@
     <string name="no_index_found">El Archivo índice no existe en esta carpeta</string>
     <string name="new_guide_version_msg">Hay una nueva versión de esta guía, desea descargarla?</string>
     <string name="open_current_guide">Abrir Actual</string>
+    <string name="ok">Ok</string>
+    <string name="cambiar_folder_de_gu_as">Cambiar Folder de Guías</string>
 </resources>

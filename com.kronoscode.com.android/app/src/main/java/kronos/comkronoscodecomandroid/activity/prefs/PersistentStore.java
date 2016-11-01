@@ -2,6 +2,7 @@ package kronos.comkronoscodecomandroid.activity.prefs;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Environment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +12,8 @@ import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import kronos.comkronoscodecomandroid.activity.constants.Constants;
 
 
 /**
@@ -28,6 +31,7 @@ public class PersistentStore {
     public static final String LOGO_CACAO = "logo_cacao";
     public static final String LAST_UPDATE = "last_update";
     public static final String API_URL = "api";
+    public static final String FOLDER_NAME = "folder_name";
 
     @Inject
     public PersistentStore() {
@@ -131,5 +135,9 @@ public class PersistentStore {
         synchronized (synchronizer) {
             getSharedPreferencesEditor().remove(key).commit();
         }
+    }
+
+    public String getFolderName() {
+        return Environment.getExternalStorageDirectory().getPath() + "/" +  get(FOLDER_NAME, Constants.UNZIP_DEFAULT_DIR) + "/";
     }
 }

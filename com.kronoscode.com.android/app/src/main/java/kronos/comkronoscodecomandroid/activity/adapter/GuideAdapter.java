@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import kronos.comkronoscodecomandroid.R;
 import kronos.comkronoscodecomandroid.activity.App;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
+import kronos.comkronoscodecomandroid.activity.prefs.PersistentStore;
 import kronos.comkronoscodecomandroid.activity.utils.FolderUtil;
 import kronos.comkronoscodecomandroid.activity.utils.GuideUtils;
 
@@ -33,6 +34,9 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
     private final LayoutInflater mInflater;
     private ListView mGuideList;
     private TextView mEmpty;
+
+    @Inject
+    PersistentStore persistentStore;
 
     @Inject
     FolderUtil folderUtil;
@@ -101,7 +105,7 @@ public class GuideAdapter extends BaseExpandableListAdapter implements Filterabl
 
         holder.mAction.setClickable(false);
 
-        if (folderUtil.checkIfFolderExist(Constants.UNZIP_DIR +  folderUtil.getNameFromPath(version.getFile()))) {
+        if (folderUtil.checkIfFolderExist(persistentStore.getFolderName() +  folderUtil.getNameFromPath(version.getFile()))) {
             holder.mAction.setText(R.string.open);
         } else {
             holder.mAction.setText(R.string.download);

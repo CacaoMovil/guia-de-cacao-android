@@ -20,6 +20,7 @@ import javax.inject.Singleton;
 
 import kronos.comkronoscodecomandroid.R;
 import kronos.comkronoscodecomandroid.activity.constants.Constants;
+import kronos.comkronoscodecomandroid.activity.prefs.PersistentStore;
 
 
 /**
@@ -33,6 +34,9 @@ public class GuideUtils {
 
     @Inject
     ContentResolver contentResolver;
+
+    @Inject
+    PersistentStore persistentStore;
 
     @Inject
     public GuideUtils() {
@@ -79,7 +83,7 @@ public class GuideUtils {
         do {
             if (cursor != null && cursor.moveToFirst()) {
                 String file = cursor.getString(cursor.getColumnIndex(GuideVersionTable.FILE));
-                if (folderUtil.checkIfFolderExist(Constants.UNZIP_DIR +  folderUtil.getNameFromPath(file))) {
+                if (folderUtil.checkIfFolderExist(persistentStore.getFolderName() +  folderUtil.getNameFromPath(file))) {
                     return true;
                 }
             }
