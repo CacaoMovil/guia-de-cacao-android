@@ -10,7 +10,7 @@ import android.util.Log;
  
 public class CacaoDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "cacao.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 11; 
     public static final String TAG = "CacaoDatabase";
  
     public CacaoDatabase(final Context context) {
@@ -20,6 +20,8 @@ public class CacaoDatabase extends SQLiteOpenHelper {
     @Override
     public final void onCreate(final SQLiteDatabase db) {
         db.execSQL(GuideTable.SQL_CREATE);
+ 
+        db.execSQL(EventTable.SQL_CREATE);
  
         db.execSQL(GuideVersionTable.SQL_CREATE);
     }
@@ -31,6 +33,8 @@ public class CacaoDatabase extends SQLiteOpenHelper {
   
     private void dropTablesAndCreate(final SQLiteDatabase db) {
         db.execSQL(GuideTable.SQL_DROP);
+ 
+        db.execSQL(EventTable.SQL_DROP);
  
         db.execSQL(GuideVersionTable.SQL_DROP);
    

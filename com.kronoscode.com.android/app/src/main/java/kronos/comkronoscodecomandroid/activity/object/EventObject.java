@@ -7,12 +7,12 @@ import java.util.List;
  * Created by jhon on 11/1/16.
  */
 
-public class Event {
+public class EventObject {
 
     private String name;
     private String description;
-    private Date start;
-    private Date end;
+    private String start;
+    private String end;
     private List<CountryEvent> countryEventList;
 
     public String getName() {
@@ -31,19 +31,19 @@ public class Event {
         this.description = description;
     }
 
-    public Date getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 

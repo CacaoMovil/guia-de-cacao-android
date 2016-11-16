@@ -2,8 +2,7 @@
   "type": "content-provider",
   "packageName": "com.kronoscode.cacao.android.app",
   "databaseName": "cacao",
-  "databaseVersion": 6
-
+  "databaseVersion": 11
   ,
   "models": [
     {
@@ -16,7 +15,29 @@
         {
             "type":"String",
             "name":"tags"
+        }
+      ],
+      "parcelable": true
+    },
+    {
+      "name": "Event",
+      "members" : [
+        {
+          "type":"String",
+          "name":"eventId"
         },
+        {
+          "type":"String",
+          "name":"description"
+        },
+        {
+          "type":"String",
+          "name":"startDate"
+        },
+        {
+          "type":"String",
+          "name":"endDate"
+        }
       ],
       "parcelable": true
     },

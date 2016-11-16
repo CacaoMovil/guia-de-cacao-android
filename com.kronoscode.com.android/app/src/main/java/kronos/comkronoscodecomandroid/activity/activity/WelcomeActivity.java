@@ -149,4 +149,12 @@ public class WelcomeActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        //Intent intent = new Intent(this, WelcomeActivity.class);
+        //startActivity(intent);
+        //overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finishAffinity();
+    }
 }

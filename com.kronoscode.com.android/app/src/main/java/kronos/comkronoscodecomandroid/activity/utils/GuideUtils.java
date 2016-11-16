@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 
+import com.kronoscode.cacao.android.app.database.table.EventTable;
 import com.kronoscode.cacao.android.app.database.table.GuideVersionTable;
 import com.kronoscode.cacao.android.app.model.GuideVersion;
 import com.kronoscode.cacao.android.app.provider.CacaoProvider;
@@ -68,6 +69,10 @@ public class GuideUtils {
         } while (cursor != null && cursor.moveToNext());
 
         return versions;
+    }
+
+    public Cursor getEvents() {
+        return contentResolver.query(CacaoProvider.EVENT_CONTENT_URI, null, EventTable._ID, null, EventTable._ID + " DESC");
     }
 
     /**

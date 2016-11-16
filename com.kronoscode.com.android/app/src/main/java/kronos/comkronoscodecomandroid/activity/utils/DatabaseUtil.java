@@ -28,4 +28,11 @@ public class DatabaseUtil {
         contentResolver.delete(CacaoProvider.GUIDE_CONTENT_URI, null, null);
         contentResolver.delete(CacaoProvider.GUIDEVERSION_CONTENT_URI, null, null);
     }
+
+    /**
+     * This function will clean all the tables
+     */
+    public void cleanEventsTable() {
+        contentResolver.delete(CacaoProvider.EVENT_CONTENT_URI, null, null);
+    }
 }

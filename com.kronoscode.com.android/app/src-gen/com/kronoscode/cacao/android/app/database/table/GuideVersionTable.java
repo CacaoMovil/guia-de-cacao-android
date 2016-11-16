@@ -7,10 +7,8 @@ public final class GuideVersionTable {
  
     public static final String _ID = "_id"; 
  
-    public static final String NAME = "name";
-
-    public static final String TAGS = "tags";
-
+    public static final String NAME = "name"; 
+ 
     public static final String FILE = "file"; 
  
     public static final String DATE = "date"; 
@@ -18,6 +16,8 @@ public final class GuideVersionTable {
     public static final String NUM_VERSION = "num_version"; 
  
     public static final String PATH = "path"; 
+ 
+    public static final String TAGS = "tags"; 
   
     public static final String[] ALL_COLUMNS = new String[] { _ID, NAME, FILE, DATE, NUM_VERSION, PATH, TAGS };
  

@@ -27,4 +27,13 @@ public class ApiModule {
                 .build();
         return retrofit.create(SettingsService.class);
     }
+
+    @Provides
+    public EventService eventService(PersistentStore persistentStore) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(persistentStore.get(PersistentStore.API_URL, Constants.DEFAULT_API_URL))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        return retrofit.create(EventService.class);
+    }
 }
