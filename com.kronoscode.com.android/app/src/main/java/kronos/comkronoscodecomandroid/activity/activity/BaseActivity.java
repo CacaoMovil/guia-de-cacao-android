@@ -24,7 +24,6 @@ import com.kronoscode.cacao.android.app.model.Event;
 import com.kronoscode.cacao.android.app.provider.CacaoProvider;
 
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -165,12 +164,12 @@ public class BaseActivity extends AppCompatActivity {
         } catch (RemoteException | OperationApplicationException e) {
             e.printStackTrace();
         }
-
     }
 
     private void openEvent(Event event) {
         Intent intent = new Intent(this, EventActivity.class);
         intent.putExtra("title", event.getEventId());
+        intent.putExtra("startDate", event.getStartDate());
         intent.putExtra("description", event.getDescription());
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
@@ -191,8 +190,8 @@ public class BaseActivity extends AppCompatActivity {
         // Should we show an explanation?
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             new AlertDialog.Builder(this)
-                    .setTitle("Inform and request")
-                    .setMessage("You need to enable permissions")
+                    .setTitle("Permisos de escritura requeridos")
+                    //.setMessage("You need to enable permissions")
                     .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

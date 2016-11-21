@@ -40,7 +40,6 @@ public class WelcomeActivity extends BaseActivity {
     @Bind(R.id.welcome_title)
     TextView welcomeTitle;
 
-
     @Bind(R.id.logo)
     ImageView logoImageView;
 

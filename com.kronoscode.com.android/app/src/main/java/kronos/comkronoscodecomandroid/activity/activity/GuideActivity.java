@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -50,11 +51,11 @@ public class GuideActivity extends BaseActivity {
         App.getInjectComponent(this).inject(this);
 
         setSupportActionBar(toolbar);
-        setTitle(getString(R.string.title));
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
+            setTitle(getIntent().getStringExtra("name"));
         }
 
         if (getIntent().getExtras() != null) {
@@ -66,7 +67,6 @@ public class GuideActivity extends BaseActivity {
                 webSettings.setBuiltInZoomControls(true);
                 webSettings.setDomStorageEnabled(true);
                 webSettings.setSupportZoom(true);
-
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     webSettings.setAllowUniversalAccessFromFileURLs(true);
@@ -83,6 +83,12 @@ public class GuideActivity extends BaseActivity {
                 eventBus.post(new ToastEvent(getString(R.string.no_index_found)));
             }
         }
+
+        if (18 < Build.VERSION.SDK_INT ){
+            //18 = JellyBean MR2, KITKAT=19
+            browser.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        }
+
     }
 
     @Override
@@ -107,6 +113,9 @@ public class GuideActivity extends BaseActivity {
         inflater.inflate(R.menu.menu_main, menu);
 
         SearchView searchview = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        menu.findItem(R.id.action_search).setVisible(false);
+        //searchview.setVisibility(View.GONE);
+        //menu.se
 
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -117,7 +126,7 @@ public class GuideActivity extends BaseActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Intent returnIntent = new Intent(getApplicationContext(), MainActivity.class);
-                returnIntent.putExtra("query", query);
+                returnIntent.putExtra(Constants.QUERY, query);
                 setResult(RESULT_OK, returnIntent);
                 startActivity(returnIntent);
                 return true;

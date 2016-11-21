@@ -33,6 +33,7 @@ import android.widget.TextView;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.kronoscode.cacao.android.app.database.table.GuideTable;
@@ -112,6 +113,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     @Bind(R.id.list_container)
     ViewGroup listContainer;
 
+    @NotRequired
     @BindExtra(Constants.SEARCH_VALUE)
     String searchValue;
 
@@ -170,7 +172,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         listViewAction();
 
-        if (getIntent().getExtras() != null) {
+        if (searchValue != null) {
             if (searchValue.equals(Constants.SOURCE_ONLINE)) {
                 // Try to update our local database
                 getRemoteData();
@@ -179,6 +181,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 new unzipFile().execute(file);
             }
         }
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -586,7 +589,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
                 if (searchValue.equals(Constants.SOURCE_ONLINE)) {
                     folderUtil.cleanDir(Constants.ZIP_DIR + filename);
-                    goToFolder(persistentStore.getFolderName() + filename.split(".zip")[0]);
+                    goToFolder(persistentStore.getFolderName() + filename.split(".zip")[0], "");
                     restartLoader();
                 } else {
                     try {
@@ -606,9 +609,10 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
      *
      * @param localPath
      */
-    public void goToFolder(String localPath) {
+    public void goToFolder(String localPath, String name) {
         try {
             Intent intent = new Intent(this, GuideActivity.class);
+            intent.putExtra("name", name);
             String oldIndexPath = localPath + "/guia/index.html";
             if (folderUtil.checkIfFolderExist(oldIndexPath)) {
                 intent.putExtra(Constants.FILE, localPath + "/guia/index.html");
@@ -805,7 +809,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
                 .setNegativeButton(R.string.open_current_guide, new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
                         String currentAvailableFile = guideUtils.returnCurrentAvailableGuide(guideName, Integer.parseInt(version));
-                        goToFolder(persistentStore.getFolderName() + currentAvailableFile);
+                        goToFolder(persistentStore.getFolderName() + currentAvailableFile, "");
                     }
                 });
         final AlertDialog alert = builder.create();
@@ -822,7 +826,7 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
                 // Order : if guide exists, if there is an update, download guide
                 if (folderUtil.checkIfFolderExist(persistentStore.getFolderName() + folderUtil.getNameFromPath(version.getFile()))) {
-                    goToFolder(persistentStore.getFolderName() + folderUtil.getNameFromPath(version.getFile()));
+                    goToFolder(persistentStore.getFolderName() + folderUtil.getNameFromPath(version.getFile()), version.getName());
                 } else if (guideUtils.isAnUpdate(version.getName(), Integer.parseInt(version.getNumVersion()))) {
                     newGuideUpdateDialog(version.getFile(), version.getName(), version.getNumVersion());
                 } else {
