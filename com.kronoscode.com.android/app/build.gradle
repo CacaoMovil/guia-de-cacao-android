@@ -13,11 +13,12 @@ android {
         applicationId "kronos.cacaomovil"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 21
-        versionName "1.9.12"
+        versionCode 22
+        versionName "1.9.13"
 
         // FOLDER NAME FOR CACAO GUIDES
         buildConfigField 'String', 'CACAO_GUIDES', "\"CACAO GUIAS\""
+        multiDexEnabled true
     }
 
     // GUIDES FOLDER
@@ -65,6 +66,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile 'com.google.firebase:firebase-invites:9.8.0'
+    compile 'com.android.support:multidex:1.0.0'
 
     compile 'com.google.firebase:firebase-invites:9.6.1'
 
