@@ -77,6 +77,7 @@ public class WelcomeActivity extends BaseActivity {
         App.getInjectComponent(this).inject(this);
         ButterKnife.bind(this);
 
+
         getSettings();
     }
 
@@ -113,7 +114,6 @@ public class WelcomeActivity extends BaseActivity {
         imageUtil.loadImage(logoImageView, logo);
     }
 
-
     @Subscribe
     public void onUpdateSettingsEvent(UpdateSettingsEvent event) {
         fillCacaoInfo();
@@ -122,6 +122,8 @@ public class WelcomeActivity extends BaseActivity {
     public void getSettings() {
 
         if (!networkUtil.isNetworkAvailable()) {
+            //bus.post(new UpdateSettingsEvent());
+            fillCacaoInfo();
             return;
         }
 
@@ -141,6 +143,7 @@ public class WelcomeActivity extends BaseActivity {
 
                     bus.post(new UpdateSettingsEvent());
                 }
+
             }
 
             @Override

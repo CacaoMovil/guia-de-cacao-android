@@ -7,10 +7,11 @@
         android:id="@+id/toolbar"
         layout="@layout/app_toolbar"/> 
 
-    <WebView
+    <kronos.comkronoscodecomandroid.activity.utils.CustomWebView
         android:id="@+id/webview"
         android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
+        android:clickable="true"
         android:layout_height="match_parent" />
 
 </RelativeLayout>

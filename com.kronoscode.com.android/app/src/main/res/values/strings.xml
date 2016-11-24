@@ -46,4 +46,14 @@
     <string name="open_current_guide">Abrir Actual</string>
     <string name="ok">Ok</string>
     <string name="cambiar_folder_de_gu_as">Cambiar Folder de Guías</string>
+
+
+    <string name="invitation_title">Send App Invite Quickstart Invitation</string>
+    <string name="invitation_message">This app is terrific, give it a try and get $5 off!</string>
+    <string name="invitation_deep_link">http://example.com/offer/five_dollar_offer</string>
+    <string name="invitation_custom_image">https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png</string>
+    <string name="invitation_cta">Install!</string>
+    <string name="invitation_subject">Try this great app!</string>
+    <string name="enviar_invitacion">Enviar Invitacion</string>
+
 </resources>

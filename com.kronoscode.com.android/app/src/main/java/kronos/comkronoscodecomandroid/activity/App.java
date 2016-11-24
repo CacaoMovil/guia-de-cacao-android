@@ -6,8 +6,8 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
+//import com.google.android.gms.analytics.GoogleAnalytics;
+//import com.google.android.gms.analytics.Tracker;
 
 import de.greenrobot.event.Subscribe;
 import kronos.comkronoscodecomandroid.activity.event.ToastEvent;
@@ -20,8 +20,8 @@ public class App extends Application {
     //@Inject
     //EventBus bus;
 
-    public static GoogleAnalytics analytics;
-    public static Tracker tracker;
+    //public static GoogleAnalytics analytics;
+    //public static Tracker tracker;
 
     private AppComponent appComponent;
 

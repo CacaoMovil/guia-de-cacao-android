@@ -16,6 +16,8 @@ android {
         versionCode 21
         versionName "1.9.12"
 
+        multiDexEnabled true
+
         // FOLDER NAME FOR CACAO GUIDES
         buildConfigField 'String', 'CACAO_GUIDES', "\"CACAO GUIAS\""
     }
@@ -37,6 +39,10 @@ android {
         }
     }
 
+    configurations {
+        all*.exclude group: 'com.google.firebase'
+    }
+
     // Enabling multidex support.
 }
 
@@ -46,6 +52,7 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.6.1'
     compile 'com.android.support:support-v4:25.0.1'
     compile 'com.google.android.gms:play-services:9.8.0'
+
     compile 'com.jakewharton:butterknife:7.0.0'
 
     compile 'com.vikingsen:pocketknife-core:3.1.0'
@@ -64,10 +71,15 @@ dependencies {
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    compile 'com.google.firebase:firebase-invites:9.8.0'
 
-    compile 'com.google.firebase:firebase-invites:9.6.1'
+    compile 'com.google.android.gms:play-services-appinvite:9.8.0'
 
+    //dependencies {
+      //  compile 'com.android.support:multidex:1.0.0'
+    //}
 
+    //dependencies {
+      //  compile 'com.android.support:multidex:1.0.1'
+    //}
 
 }

@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.SearchView;
@@ -32,9 +33,14 @@ import android.widget.TextView;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.gson.Gson;
 import com.kronoscode.cacao.android.app.database.table.GuideTable;
 import com.kronoscode.cacao.android.app.database.table.GuideVersionTable;
@@ -89,7 +95,8 @@ import retrofit.Retrofit;
 /**
  * Created by jhon on 2/03/2015.
  */
-public class MainActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, ExpandableListView.OnChildClickListener {
+public class MainActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, ExpandableListView.OnChildClickListener,
+        GoogleApiClient.OnConnectionFailedListener {
 
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
     public int MY_PERMISSION_THING = 0;
@@ -146,6 +153,8 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     @Inject
     NetworkUtil networkUtil;
 
+    private GoogleApiClient mGoogleApiClient;
+
     @Inject
     SettingsService settingsService2;
     /**
@@ -162,6 +171,9 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         ButterKnife.bind(this);
         PocketKnife.bindExtras(this);
         setSupportActionBar(toolbar);
+
+        showAppInvites();
+
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -235,6 +247,8 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             changeApiPopUp();
         } else if (id == R.id.action_update_folder) {
             changeFolderName();
+        }  else if (id == R.id.action_send_invite) {
+            onInviteClicked();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -423,6 +437,11 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         AppIndex.AppIndexApi.end(client, getIndexApiAction());
         client.disconnect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
     /**
@@ -742,6 +761,19 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
+        if (requestCode == 22) {
+            if (resultCode == RESULT_OK) {
+                // Check how many invitations were sent and log a message
+                // The ids array contains the unique invitation ids for each invitation sent
+                // (one for each contact select by the user). You can use these for analytics
+                // as the ID will be consistent on the sending and receiving devices.
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+
+                System.out.println("Entro enviando invitacion");
+                eventBus.post(new ToastEvent("Invitacion enviada : " + ids));
+                // Log.d(TAG, getString(R.string.sent_invitations_fmt, ids.length));
+            }
+        }
         if (requestCode == REQUEST_ID) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
@@ -900,6 +932,39 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
         Intent intent = new Intent(this, WelcomeActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    private void showAppInvites() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(AppInvite.API)
+                .enableAutoManage(this, this)
+                .build();
+
+        // Check for App Invite invitations and launch deep-link activity if possible.
+        // Requires that an Activity is registered in AndroidManifest.xml to handle
+        // deep-link URLs.
+        boolean autoLaunchDeepLink = true;
+        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(
+                        new ResultCallback<AppInviteInvitationResult>() {
+                            @Override
+                            public void onResult(AppInviteInvitationResult result) {
+                                //Log.d(TAG, "getInvitation:onResult:" + result.getStatus());
+                                // Because autoLaunchDeepLink = true we don't have to do anything
+                                // here, but we could set that to false and manually choose
+                                // an Activity to launch to handle the deep link here.
+                            }
+                        });
+    }
+
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, 22);
     }
 
 }
