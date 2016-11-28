@@ -18,10 +18,6 @@
     <item android:id="@+id/action_update_api" android:title="@string/action_update_api"
         android:orderInCategory="100" app:showAsAction="never" />
 
-
-    <item android:id="@+id/action_update_folder" android:title="@string/cambiar_folder_de_gu_as"
-        android:orderInCategory="100" app:showAsAction="never" />
-
     <item android:id="@+id/action_send_invite" android:title="@string/enviar_invitacion"
         android:orderInCategory="100" app:showAsAction="never" />
 

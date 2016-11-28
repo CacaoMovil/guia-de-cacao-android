@@ -245,8 +245,6 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
             startActivityForResult(intent, REQUEST_ID);
         } else if (id == R.id.action_update_api) {
             changeApiPopUp();
-        } else if (id == R.id.action_update_folder) {
-            changeFolderName();
         }  else if (id == R.id.action_send_invite) {
             onInviteClicked();
         }
