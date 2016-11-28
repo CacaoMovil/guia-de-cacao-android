@@ -106,12 +106,15 @@ public class WelcomeActivity extends BaseActivity {
     }
 
     private void fillCacaoInfo() {
-        title.setText(persistentStore.get(PersistentStore.TITLE_CACACO, Constants.DEFAULT_TITLE_CACAO));
-        welcomeTitle.setText(persistentStore.get(PersistentStore.WELCOME_CACAO, Constants.DEFAULT_WELCOME_CACAO));
-
-        String logo = persistentStore.get(PersistentStore.LOGO_CACAO, Constants.LOGO_DEFAULT);
-
-        imageUtil.loadImage(logoImageView, logo);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                title.setText(persistentStore.get(PersistentStore.TITLE_CACACO, Constants.DEFAULT_TITLE_CACAO));
+                welcomeTitle.setText(persistentStore.get(PersistentStore.WELCOME_CACAO, Constants.DEFAULT_WELCOME_CACAO));
+                String logo = persistentStore.get(PersistentStore.LOGO_CACAO, Constants.LOGO_DEFAULT);
+                imageUtil.loadImage(logoImageView, logo);
+            }
+        });
     }
 
     @Subscribe
