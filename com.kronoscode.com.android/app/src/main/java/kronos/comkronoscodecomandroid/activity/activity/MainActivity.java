@@ -101,6 +101,8 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
     public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
     public int MY_PERMISSION_THING = 0;
     private static final int REQUEST_ID = 1;
+    private static final int REQUEST_INVITE = 22;
+
     private static final int LOADER_ID = 0;
     private ProgressDialog progressDialog;
     private String filename;
@@ -760,20 +762,21 @@ public class MainActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == 22) {
-            if (resultCode == RESULT_OK) {
-                // Check how many invitations were sent and log a message
-                // The ids array contains the unique invitation ids for each invitation sent
-                // (one for each contact select by the user). You can use these for analytics
-                // as the ID will be consistent on the sending and receiving devices.
-                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+        Log.d("TAG", "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
 
-                System.out.println("Entro enviando invitacion");
-                eventBus.post(new ToastEvent("Invitacion enviada : " + ids));
-                // Log.d(TAG, getString(R.string.sent_invitations_fmt, ids.length));
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d("", "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
             }
         }
+
         if (requestCode == REQUEST_ID) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     sourceSets {
@@ -22,6 +23,7 @@ android {
         buildConfigField 'String', 'CACAO_GUIDES', "\"CACAO GUIAS\""
         multiDexEnabled true
     }
+
 
     // GUIDES FOLDER
     // Important to exclude because of retrofit
@@ -52,7 +54,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
     compile 'com.android.support:support-v4:25.0.1'
-    compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.google.android.gms:play-services:9.0.0'
 
     compile 'com.jakewharton:butterknife:7.0.0'
 
@@ -72,10 +74,12 @@ dependencies {
 
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    compile 'com.google.firebase:firebase-invites:9.8.0'
+    //compile 'com.google.firebase:firebase-invites:9.8.0'
     compile 'com.android.support:multidex:1.0.0'
 
-    compile 'com.google.android.gms:play-services-appinvite:9.8.0'
+    //compile 'com.google.android.gms:play-services-appinvite:9.8.0'
+//    compile 'com.google.android.gms:play-services-appinvite:8.4.0'
+
 
     //dependencies {
       //  compile 'com.android.support:multidex:1.0.0'
