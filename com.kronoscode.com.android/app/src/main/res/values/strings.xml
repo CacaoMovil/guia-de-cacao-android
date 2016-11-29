@@ -48,12 +48,12 @@
     <string name="cambiar_folder_de_gu_as">Cambiar Folder de Guías</string>
 
 
-    <string name="invitation_title">Send App Invite Quickstart Invitation</string>
-    <string name="invitation_message">This app is terrific, give it a try and get $5 off!</string>
-    <string name="invitation_deep_link">http://example.com/offer/five_dollar_offer</string>
-    <string name="invitation_custom_image">https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png</string>
-    <string name="invitation_cta">Install!</string>
-    <string name="invitation_subject">Try this great app!</string>
-    <string name="enviar_invitacion">Enviar Invitacion</string>
+    <string name="invitation_title">Envía una invitación</string>
+    <string name="invitation_message">Aprendiendo e innovando sobre el cacao en sistemas agroforestales</string>
+    <string name="invitation_deep_link">http://cacaomovil.com</string>
+    <string name="invitation_custom_image">http://cacaomovil.com/static/image/app-invite.png</string>
+    <string name="invitation_cta">Instalar</string>
+    <string name="invitation_subject">Prueba Cacaomovil</string>
+    <string name="enviar_invitacion">Enviar Invitación</string>
 
 </resources>
