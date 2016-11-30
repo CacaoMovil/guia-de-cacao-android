@@ -1,6 +1,7 @@
 package kronos.comkronoscodecomandroid.activity.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -88,6 +89,19 @@ public class GuideActivity extends BaseActivity {
             //18 = JellyBean MR2, KITKAT=19
             browser.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         }
+
+        browser.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView wView, String url) {
+                if(url != null && url.startsWith("whatsapp://"))  {
+                    browser.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    return true;
+
+                } else  {
+                    return false;
+                }
+            }
+        });
 
     }
 

@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">8dp</dimen>
+    <dimen name="activity_vertical_margin">3dp</dimen>
+    <dimen name="welcome_screen_button_width">180dp</dimen>
+    <dimen name="welcome_central_image_height">70dp</dimen>
+    <dimen name="welcome_central_image_top_margin">20dp</dimen>
+    <dimen name="list_image_height">100dp</dimen>
+    <dimen name="welcome_title_text_size">20sp</dimen>
+</resources>
