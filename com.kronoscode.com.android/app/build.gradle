@@ -9,19 +9,21 @@ android {
     }
 
     compileSdkVersion 25
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "24.0.1"
     defaultConfig {
         applicationId "kronos.cacaomovil"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 23
-        versionName "1.9.14"
+        versionCode 24
+        versionName "1.9.15"
 
         multiDexEnabled true
 
         // FOLDER NAME FOR CACAO GUIDES
         buildConfigField 'String', 'CACAO_GUIDES', "\"CACAO GUIAS\""
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+
     }
 
 
