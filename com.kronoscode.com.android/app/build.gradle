@@ -13,9 +13,9 @@ android {
     defaultConfig {
         applicationId "kronos.cacaomovil"
         minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 24
-        versionName "1.9.15"
+        targetSdkVersion 26
+        versionCode 26
+        versionName "1.9.17"
 
         multiDexEnabled true
 

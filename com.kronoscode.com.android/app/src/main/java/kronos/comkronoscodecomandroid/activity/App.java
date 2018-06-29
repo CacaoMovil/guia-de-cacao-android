@@ -6,8 +6,8 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-//import com.google.android.gms.analytics.GoogleAnalytics;
-//import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 
 import de.greenrobot.event.Subscribe;
 import kronos.comkronoscodecomandroid.activity.event.ToastEvent;
@@ -20,8 +20,8 @@ public class App extends Application {
     //@Inject
     //EventBus bus;
 
-    //public static GoogleAnalytics analytics;
-    //public static Tracker tracker;
+    public static GoogleAnalytics analytics;
+    public static Tracker tracker;
 
     private AppComponent appComponent;
 
@@ -40,13 +40,13 @@ public class App extends Application {
         //bus.register(this);
 
         // analytics
-        /*analytics = GoogleAnalytics.getInstance(this);
+        analytics = GoogleAnalytics.getInstance(this);
         analytics.setLocalDispatchPeriod(1800);
 
         tracker = analytics.newTracker("UA-64984400-2"); // Replace with actual tracker/property Id
         tracker.enableExceptionReporting(true);
         tracker.enableAdvertisingIdCollection(true);
-        tracker.enableAutoActivityTracking(true);*/
+        tracker.enableAutoActivityTracking(true);
 
     }
 
